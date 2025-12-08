@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.ant-progress-text {
+  font-size: 12px !important;
+}
+
+.ant-radio-wrapper {
+  margin-right: 0;
+  width: 100%;
+}
+
+.ant-radio-group {
+  width: 100%;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .ant-card-body {
+    padding: 20px !important;
+  }
+
+  .ant-typography h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .ant-typography h2 {
+    font-size: 1.3rem !important;
+  }
+
+  .ant-typography h3 {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .ant-btn {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  .ant-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}

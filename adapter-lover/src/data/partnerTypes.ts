@@ -1,0 +1,269 @@
+import { PartnerType } from '../types';
+
+// 八大伴侣类型定义
+export const partnerTypes: PartnerType[] = [
+  {
+    id: 'stable-harbor',
+    name: '稳定港湾型',
+    description: '情感稳定、可靠务实、能提供强烈安全感的人',
+    idealProfile: { S: 80, A: 40, G: 50, R: 70, E: 50 },
+    characteristics: {
+      personality: ['沉稳可靠', '有责任心', '情绪稳定', '重视承诺'],
+      values: '重视稳定和长期关系，认为安全感是亲密关系的基石',
+      emotionalExpression: '不善于花言巧语，但会用实际行动表达关心',
+      lifestyle: '生活规律，有良好的习惯，对未来有清晰规划'
+    },
+    suitableFor: {
+      dimensions: { S: 70, R: 60 },
+      description: '特别适合需要情感安全感和现实保障的人'
+    },
+    signals: {
+      earlySigns: [
+        '言谈举止沉稳，不会轻易做出承诺',
+        '有稳定的社交圈和生活习惯',
+        '在金钱和未来规划上有清晰思路'
+      ],
+      verificationMethods: [
+        '观察他们如何处理压力和挫折',
+        '看看他们对朋友和家人的责任感',
+        '注意他们言行的一致性'
+      ]
+    },
+    tips: [
+      '给他们足够的信任空间，过度猜疑会适得其反',
+      '用行动表达感谢，他们更在意实际付出',
+      '定期进行情感交流，避免因为过于稳定而忽视成长'
+    ]
+  },
+  {
+    id: 'shoulder-to-shoulder',
+    name: '并肩打拼型',
+    description: '有强烈事业心、目标明确、愿意共同奋斗的伙伴',
+    idealProfile: { S: 50, A: 50, G: 85, R: 70, E: 40 },
+    characteristics: {
+      personality: ['目标导向', '执行力强', '积极进取', '理性务实'],
+      values: '相信共同成长和互相激励，追求事业和人生目标的实现',
+      emotionalExpression: '更倾向于用行动和结果表达情感',
+      lifestyle: '节奏较快，重视效率和个人成长'
+    },
+    suitableFor: {
+      dimensions: { G: 70, R: 50 },
+      description: '适合有事业追求、重视共同成长的人'
+    },
+    signals: {
+      earlySigns: [
+        '谈话中经常提到未来的计划和目标',
+        '对自己的职业发展有清晰规划',
+        '在讨论问题时，习惯先分析可行性'
+      ],
+      verificationMethods: [
+        '了解他们具体的事业规划和目标',
+        '观察他们面对挑战时的态度',
+        '看看他们是否愿意支持你的成长'
+      ]
+    },
+    tips: [
+      '理解他们投入工作的状态，给予支持和空间',
+      '主动参与他们的事业规划，成为真正的战友',
+      '注意平衡工作和生活，避免过度忽视情感需求'
+    ]
+  },
+  {
+    id: 'nurturing-caregiver',
+    name: '滋养照顾型',
+    description: '善于照顾他人、情感细腻、乐于付出的伴侣',
+    idealProfile: { S: 85, A: 30, G: 40, R: 40, E: 80 },
+    characteristics: {
+      personality: ['细腻体贴', '善解人意', '有耐心', '乐于付出'],
+      values: '认为照顾和滋养是爱的表达，重视情感的深度交流',
+      emotionalExpression: '善于用言语和行动表达关心和爱意',
+      lifestyle: '节奏温和，重视生活品质和情感细节'
+    },
+    suitableFor: {
+      dimensions: { S: 70, E: 60 },
+      description: '特别适合需要被照顾和情感支持的人'
+    },
+    signals: {
+      earlySigns: [
+        '总是第一个注意到你的情绪变化',
+        '在群体中习惯照顾别人的感受',
+        '聊天时善于倾听，很少打断别人'
+      ],
+      verificationMethods: [
+        '观察他们对待服务人员的态度',
+        '看看他们在你需要帮助时的反应',
+        '注意他们是否记得你说过的细节'
+      ]
+    },
+    tips: [
+      '学会表达感谢，不要把他们的付出当作理所当然',
+      '也要关心他们的需求，避免关系失衡',
+      '适当独立，避免过度依赖'
+    ]
+  },
+  {
+    id: 'soul-conversationalist',
+    name: '灵魂对谈型',
+    description: '精神追求强烈、善于深度交流、重视思想共鸣的伴侣',
+    idealProfile: { S: 50, A: 70, G: 60, R: 30, E: 85 },
+    characteristics: {
+      personality: ['思想深刻', '善于思考', '独立自主', '精神丰富'],
+      values: '追求精神层面的契合和思想共鸣，重视深度交流',
+      emotionalExpression: '善于表达复杂的情感和思想，追求高质量的对话',
+      lifestyle: '重视精神生活，喜欢阅读、思考和探讨'
+    },
+    suitableFor: {
+      dimensions: { E: 70, A: 50 },
+      description: '适合重视精神交流、追求思想深度的人'
+    },
+    signals: {
+      earlySigns: [
+        '喜欢探讨抽象话题和人生哲学',
+        '有丰富的内心世界和独特的见解',
+        '在交流中善于倾听，也善于表达'
+      ],
+      verificationMethods: [
+        '和他们讨论一些深度话题，观察思维深度',
+        '看看他们是否尊重不同的观点',
+        '注意他们是否能够进行长时间的深度对话'
+      ]
+    },
+    tips: [
+      '保持开放的心态，接纳不同的观点',
+      '也要关注生活的具体方面，避免过于理想化',
+      '给予彼此足够的思考空间'
+    ]
+  },
+  {
+    id: 'free-companion',
+    name: '自由同伴型',
+    description: '重视个人自由、边界清晰、关系轻松灵活的伴侣',
+    idealProfile: { S: 40, A: 90, G: 50, R: 40, E: 40 },
+    characteristics: {
+      personality: ['独立自主', '边界清晰', '轻松灵活', '尊重个人'],
+      values: '认为个人自由和独立是健康关系的基础，不过度纠缠',
+      emotionalExpression: '不过度表达情感，保持适当的距离感',
+      lifestyle: '重视个人空间和自由度，生活节奏灵活'
+    },
+    suitableFor: {
+      dimensions: { A: 80, S: 40 },
+      description: '适合独立性很强、不喜欢被关系束缚的人'
+    },
+    signals: {
+      earlySigns: [
+        '有自己的朋友圈和生活节奏',
+        '不会过多追问你的行踪和隐私',
+        '在关系中保持一定程度的神秘感'
+      ],
+      verificationMethods: [
+        '观察他们是否尊重你的个人边界',
+        '看看他们是否有自己的独立生活',
+        '注意他们在关系中的独立性程度'
+      ]
+    },
+    tips: [
+      '建立清晰的沟通规则，避免因距离产生误解',
+      '定期安排高质量的相处时间',
+      '尊重彼此的独立性，不要试图改变对方'
+    ]
+  },
+  {
+    id: 'rational-partner',
+    name: '理性拍档型',
+    description: '逻辑思维强、善于分析解决问题、沟通高效的伴侣',
+    idealProfile: { S: 30, A: 50, G: 60, R: 80, E: 20 },
+    characteristics: {
+      personality: ['理性冷静', '逻辑清晰', '善于分析', '务实高效'],
+      values: '重视理性和逻辑，认为问题应该通过分析来解决',
+      emotionalExpression: '不善于情感表达，更愿意用行动和结果证明',
+      lifestyle: '重视效率和结果，喜欢有计划的生活'
+    },
+    suitableFor: {
+      dimensions: { E: 30, R: 60 },
+      description: '适合理性思维较强、希望高效解决问题的人'
+    },
+    signals: {
+      earlySigns: [
+        '面对问题时，习惯先分析原因再解决',
+        '不善于情绪表达，更愿意用行动证明',
+        '在冲突中能够保持冷静，寻求解决方案'
+      ],
+      verificationMethods: [
+        '给他们一些问题，观察解决思路',
+        '看看他们面对情绪化情况时的反应',
+        '注意他们的沟通方式和逻辑性'
+      ]
+    },
+    tips: [
+      '学习理解他们的表达方式，不要期待过多的情绪化反应',
+      '主动表达自己的想法，不要等待他们猜测',
+      '在需要情感支持时，直接提出具体需求'
+    ]
+  },
+  {
+    id: 'reliable-pragmatist',
+    name: '现实靠谱型',
+    description: '脚踏实地、执行力强、注重实际结果的伴侣',
+    idealProfile: { S: 40, A: 40, G: 70, R: 90, E: 30 },
+    characteristics: {
+      personality: ['踏实稳重', '执行力强', '注重实效', '责任感强'],
+      values: '认为实际行动和结果是衡量一切的标准，重视承诺的兑现',
+      emotionalExpression: '通过实际行动和负责任的态度表达情感',
+      lifestyle: '生活规律，重视实际效果和长期规划'
+    },
+    suitableFor: {
+      dimensions: { R: 80, G: 50 },
+      description: '适合注重实际、需要可靠伴侣的人'
+    },
+    signals: {
+      earlySigns: [
+        '说话算数，承诺的事情一定会兑现',
+        '对金钱和未来规划很认真',
+        '在决策时，习惯先考虑实际可行性'
+      ],
+      verificationMethods: [
+        '观察他们对待承诺的态度',
+        '看看他们的执行力和责任感',
+        '注意他们处理现实问题的方式'
+      ]
+    },
+    tips: [
+      '理解他们对现实的重视，不要用理想化标准要求他们',
+      '在讨论问题时，提供具体的解决方案',
+      '也要关注情感的连接，避免过于功利化'
+    ]
+  },
+  {
+    id: 'emotional-resonator',
+    name: '情绪共振型',
+    description: '情感丰富、善于共情、情绪价值高的伴侣',
+    idealProfile: { S: 80, A: 30, G: 40, R: 30, E: 90 },
+    characteristics: {
+      personality: ['情感丰富', '善于共情', '表达力强', '敏感细腻'],
+      values: '认为情感的深度和共鸣是关系的核心，重视情绪价值',
+      emotionalExpression: '非常善于表达情感，能够提供高质量的情绪支持',
+      lifestyle: '重视情感交流和情绪体验，生活充满色彩'
+    },
+    suitableFor: {
+      dimensions: { E: 80, S: 60 },
+      description: '适合情感丰富、需要深度情感连接的人'
+    },
+    signals: {
+      earlySigns: [
+        '能够敏锐察觉他人的情绪变化',
+        '善于用语言和行动表达情感',
+        '在交流中经常使用"我理解你的感受"这类表达'
+      ],
+      verificationMethods: [
+        '分享一些情绪，观察他们的共情能力',
+        '看看他们如何处理情绪化情况',
+        '注意他们情感的稳定性和深度'
+      ]
+    },
+    tips: [
+      '也要关注他们的情绪需求，关系应该是双向的',
+      '学会管理自己的情绪，避免过度消耗对方',
+      '保持理性思考，不要完全被情绪主导'
+    ]
+  }
+];
