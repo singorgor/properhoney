@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Button, Card, Typography, Row, Col, Progress, Divider, Tag } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Button, Card, Typography, Row, Col, Progress, Divider, Tag, Tabs, Timeline, Space } from 'antd';
 import styled from 'styled-components';
 import { Radar } from 'react-chartjs-2';
 import {
@@ -12,10 +12,26 @@ import {
   Legend
 } from 'chart.js';
 import { TestResult } from '../types';
+import {
+  HeartOutlined,
+  StarOutlined,
+  BulbOutlined,
+  CompassOutlined,
+  UserOutlined,
+  ThunderboltOutlined,
+  GiftOutlined,
+  BookOutlined,
+  TeamOutlined,
+  FireOutlined,
+  AlertOutlined,
+  CheckCircleOutlined,
+  EyeOutlined
+} from '@ant-design/icons';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
 const { Title, Paragraph, Text } = Typography;
+const { TabPane } = Tabs;
 
 const ResultContainer = styled.div`
   min-height: 100vh;
@@ -24,11 +40,11 @@ const ResultContainer = styled.div`
 `;
 
 const ResultCard = styled(Card)`
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   border: none;
 
@@ -40,34 +56,66 @@ const ResultCard = styled(Card)`
 const HeaderSection = styled.div`
   text-align: center;
   margin-bottom: 40px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  padding: 30px;
+  border-radius: 15px;
 `;
 
 const MainTitle = styled(Title)`
   color: #667eea !important;
   margin-bottom: 10px !important;
-  font-size: 2rem !important;
+  font-size: 2.5rem !important;
 `;
 
 const SubTitle = styled(Paragraph)`
   color: #666 !important;
-  font-size: 1.1rem !important;
+  font-size: 1.2rem !important;
+  margin-bottom: 0 !important;
 `;
 
 const SectionTitle = styled(Title)`
   color: #333 !important;
-  margin: 30px 0 20px 0 !important;
-  border-bottom: 2px solid #667eea;
+  margin: 40px 0 20px 0 !important;
+  border-bottom: 3px solid #667eea;
   padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .anticon {
+    color: #667eea;
+  }
 `;
 
-const DimensionCard = styled(Card)`
-  margin-bottom: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+const SectionCard = styled(Card)`
+  margin-bottom: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: none;
+
+  .ant-card-head {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0;
+
+    .ant-card-head-title {
+      color: white !important;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+  }
 
   .ant-card-body {
-    padding: 20px;
+    padding: 30px;
   }
+`;
+
+const HighlightBox = styled.div`
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-left: 4px solid #667eea;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
 `;
 
 const ChartContainer = styled.div`
@@ -76,37 +124,12 @@ const ChartContainer = styled.div`
   padding: 20px;
 `;
 
-const PartnerTypeCard = styled(Card)<{ type?: 'recommended' | 'avoid' }>`
-  margin: 20px 0;
-  border-radius: 15px;
-  border: 2px solid ${props => props.type === 'recommended' ? '#52c41a' : '#ff4d4f'};
-  background: ${props => props.type === 'recommended'
-    ? 'linear-gradient(135deg, rgba(82, 196, 26, 0.05) 0%, rgba(82, 196, 26, 0.1) 100%)'
-    : 'linear-gradient(135deg, rgba(255, 77, 79, 0.05) 0%, rgba(255, 77, 79, 0.1) 100%)'
-  };
-
-  .ant-card-head {
-    background: ${props => props.type === 'recommended' ? '#52c41a' : '#ff4d4f'};
-    color: white;
-    border-radius: 13px 13px 0 0;
-
-    .ant-card-head-title {
-      color: white !important;
-      font-weight: 600;
-    }
-  }
-`;
-
-const TagContainer = styled.div`
-  margin: 15px 0;
-`;
-
-const CompatibilityScore = styled.div`
+const ScoreDisplay = styled.div`
   text-align: center;
   margin: 20px 0;
 
-  .score {
-    font-size: 3rem;
+  .score-value {
+    font-size: 3.5rem;
     font-weight: 700;
     background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
     -webkit-background-clip: text;
@@ -114,23 +137,103 @@ const CompatibilityScore = styled.div`
     background-clip: text;
   }
 
-  .label {
+  .score-label {
     color: #666;
-    font-size: 1rem;
+    font-size: 1.1rem;
     margin-top: 5px;
   }
 `;
 
 const ActionButton = styled(Button)`
-  height: 45px;
+  height: 50px;
   border-radius: 25px;
   font-weight: 600;
-  min-width: 120px;
+  min-width: 150px;
   margin: 10px;
+  font-size: 1rem;
+
+  .anticon {
+    margin-right: 8px;
+  }
+`;
+
+const TraitTag = styled(Tag)`
+  margin: 5px;
+  padding: 8px 15px;
+  font-size: 0.95rem;
+  border-radius: 20px;
+  border: none;
+
+  &.strength {
+    background: linear-gradient(135deg, #e6f7ff 0%, #d1f5e3 100%);
+    color: #1890ff;
+  }
+
+  &.growth {
+    background: linear-gradient(135deg, #fff7e6 0%, #ffece6 100%);
+    color: #fa8c16;
+  }
+`;
+
+const DimensionProgress = styled.div`
+  margin: 15px 0;
+
+  .dimension-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .dimension-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+`;
+
+const StageCard = styled(Card)`
+  margin: 20px 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  .ant-card-head {
+    background: linear-gradient(135deg, #f0f5ff 0%, #e6f7ff 100%);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .ant-card-body {
+    padding: 20px;
+  }
+`;
+
+const TipList = styled.ul`
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    padding-left: 35px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .anticon {
+      position: absolute;
+      left: 0;
+      top: 14px;
+      color: #52c41a;
+    }
+  }
 `;
 
 const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ result, onRestart }) => {
   const resultRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState('1');
 
   // 准备雷达图数据
   const radarData = {
@@ -158,6 +261,23 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgb(102, 126, 234)'
+      },
+      {
+        label: '理想伴侣',
+        data: [
+          result.idealPartner.baseType.idealProfile.S,
+          result.idealPartner.baseType.idealProfile.A,
+          result.idealPartner.baseType.idealProfile.G,
+          result.idealPartner.baseType.idealProfile.R,
+          result.idealPartner.baseType.idealProfile.E
+        ],
+        fill: true,
+        backgroundColor: 'rgba(82, 196, 26, 0.2)',
+        borderColor: 'rgb(82, 196, 26)',
+        pointBackgroundColor: 'rgb(82, 196, 26)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgb(82, 196, 26)'
       }
     ]
   };
@@ -176,12 +296,13 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
     },
     plugins: {
       legend: {
-        display: false
+        display: true,
+        position: 'bottom' as const
       },
       tooltip: {
         callbacks: {
           label: function(context: any) {
-            return `${context.label}: ${context.parsed.r}分`;
+            return `${context.dataset.label}: ${context.parsed.r}分`;
           }
         }
       }
@@ -200,194 +321,406 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
   };
 
   const getDimensionName = (key: keyof typeof result.dimensions) => {
-    switch (key) {
-      case 'S': return '情感安全感需求';
-      case 'A': return '个人空间需求';
-      case 'G': return '共同成长重视度';
-      case 'R': return '现实务实程度';
-      case 'E': return '情绪表达偏好';
-      default: return '';
-    }
-  };
-
-  const getDimensionDescription = (key: keyof typeof result.dimensions, level: string) => {
-    const descriptions: Record<string, Record<string, string>> = {
-      'S': {
-        '极高': '你极度需要关系中的稳定和安全感，非常重视情感的确定性',
-        '较高': '你比较重视情感安全感，需要伴侣给予足够的关注和回应',
-        '中等': '你在安全感需求上保持平衡，能够理解独立的重要性',
-        '较低': '你不太依赖外部的情感确认，更相信自己的判断',
-        '很低': '你基本不在意情感安全感，更相信感觉和直觉'
-      },
-      'A': {
-        '极高': '你需要大量的个人时间和空间来保持自我独立性',
-        '较高': '你比较重视个人空间，希望保持一定程度的独立性',
-        '中等': '你在亲密与独立间寻求平衡点',
-        '较低': '你倾向于与伴侣保持较紧密的连接',
-        '很低': '你希望与伴侣时刻保持连接，不太需要个人空间'
-      },
-      'G': {
-        '极高': '你极其重视与伴侣的共同成长和互相激励',
-        '较高': '你比较看重伴侣的进取心和发展潜力',
-        '中等': '你对成长有一定期待，但更看重关系的和谐',
-        '较低': '你更关注当下的相处感受而非发展同步性',
-        '很低': '你基本不在意伴侣的成长，更看重简单生活'
-      },
-      'R': {
-        '极高': '你非常注重关系的现实基础和规划能力',
-        '较高': '你比较看重关系的现实层面，希望伴侣有责任感',
-        '中等': '你在理想和现实间寻求平衡',
-        '较低': '你更相信感觉和情感，认为现实问题可以慢慢解决',
-        '很低': '你几乎不考虑现实因素，完全相信感觉'
-      },
-      'E': {
-        '极高': '你需要深度的情感交流和共情理解',
-        '较高': '你比较重视情感交流，希望通过沟通加深理解',
-        '中等': '你在情感表达和理性沟通间寻求平衡',
-        '较低': '你更倾向于理性沟通，不太习惯情感表达',
-        '很低': '你几乎不需要情感交流，完全倾向于理性沟通'
-      }
+    const names = {
+      'S': '情感安全感需求',
+      'A': '个人空间需求',
+      'G': '共同成长重视度',
+      'R': '现实务实程度',
+      'E': '情绪表达偏好'
     };
-    return descriptions[key]?.[level] || '';
+    return names[key];
   };
 
   return (
     <ResultContainer ref={resultRef}>
       <ResultCard>
+        {/* 报告头部 */}
         <HeaderSection>
-          <MainTitle level={1}>适配恋人测评报告</MainTitle>
-          <SubTitle>生成时间：{result.testDate.toLocaleString()}</SubTitle>
+          <MainTitle level={1}>
+            <HeartOutlined /> 适配恋人测评报告
+          </MainTitle>
+          <SubTitle>
+            {result.emotionalType.name} · 生成时间：{result.testDate.toLocaleString()}
+          </SubTitle>
         </HeaderSection>
 
-        {/* 主要结果 */}
-        <Row gutter={[24, 24]} style={{ marginBottom: 30 }}>
-          <Col xs={24} md={12}>
-            <PartnerTypeCard type="recommended">
-              <Card.Meta
-                title={`✅ 推荐伴侣类型：${result.mainType.name}`}
-                description={
-                  <div>
-                    <Paragraph>{result.mainType.description}</Paragraph>
-                    <CompatibilityScore>
-                      <div className="score">
-                        {result.compatibilityRanking[0].compatibility}%
-                      </div>
-                      <div className="label">匹配度</div>
-                    </CompatibilityScore>
-                  </div>
-                }
-              />
-            </PartnerTypeCard>
-          </Col>
-          <Col xs={24} md={12}>
-            <PartnerTypeCard type="avoid">
-              <Card.Meta
-                title={`⚠️ 避雷伴侣类型：${result.avoidType.name}`}
-                description={
-                  <div>
-                    <Paragraph>{result.avoidType.description}</Paragraph>
-                    <CompatibilityScore>
-                      <div className="score" style={{
-                        background: 'linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text'
-                      }}>
-                        {result.compatibilityRanking[result.compatibilityRanking.length - 1].compatibility}%
-                      </div>
-                      <div className="label">匹配度</div>
-                    </CompatibilityScore>
-                  </div>
-                }
-              />
-            </PartnerTypeCard>
-          </Col>
-        </Row>
+        {/* 核心概览 */}
+        <SectionTitle level={2}>
+          <StarOutlined /> 你的情感特质概览
+        </SectionTitle>
+        <Paragraph style={{ fontSize: '1.1rem', color: '#555', lineHeight: 1.8 }}>
+          {result.emotionalType.description}
+        </Paragraph>
 
-        {/* 五维度雷达图 */}
-        <SectionTitle level={2}>你的情感画像</SectionTitle>
-        <Row gutter={[24, 24]}>
-          <Col xs={24} md={12}>
-            <ChartContainer>
-              <Radar data={radarData} options={radarOptions} />
-            </ChartContainer>
-          </Col>
-          <Col xs={24} md={12}>
-            {Object.entries(result.dimensions).map(([key, value]) => (
-              <DimensionCard key={key}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <Text strong>{getDimensionName(key as keyof typeof result.dimensions)}</Text>
-                  <Tag color={getDimensionColor(result.dimensionLevels[key as keyof typeof result.dimensionLevels])}>
-                    {result.dimensionLevels[key as keyof typeof result.dimensionLevels]} ({value}分)
-                  </Tag>
-                </div>
-                <Progress
-                  percent={value}
-                  strokeColor={getDimensionColor(result.dimensionLevels[key as keyof typeof result.dimensionLevels])}
-                  showInfo={false}
-                  strokeWidth={8}
-                />
-                <Paragraph style={{ margin: '10px 0 0 0', color: '#666', fontSize: '0.9rem' }}>
-                  {getDimensionDescription(key as keyof typeof result.dimensions, result.dimensionLevels[key as keyof typeof result.dimensionLevels])}
-                </Paragraph>
-              </DimensionCard>
-            ))}
-          </Col>
-        </Row>
+        {/* 标签页内容 */}
+        <Tabs activeKey={activeTab} onChange={setActiveTab} centered size="large">
+          <TabPane tab={
+            <span>
+              <UserOutlined />
+              你的情感画像
+            </span>
+          } key="1">
+            <Row gutter={[30, 30]}>
+              <Col xs={24} md={12}>
+                <ChartContainer>
+                  <Radar data={radarData} options={radarOptions} />
+                </ChartContainer>
+              </Col>
+              <Col xs={24} md={12}>
+                <Title level={4}>五维度解析</Title>
+                {Object.entries(result.dimensions).map(([key, value]) => (
+                  <DimensionProgress key={key}>
+                    <div className="dimension-label">
+                      <Text strong>{getDimensionName(key as keyof typeof result.dimensions)}</Text>
+                      <Tag color={getDimensionColor(result.dimensionLevels[key as keyof typeof result.dimensionLevels])}>
+                        {result.dimensionLevels[key as keyof typeof result.dimensionLevels]} ({value}分)
+                      </Tag>
+                    </div>
+                    <Progress
+                      percent={value}
+                      strokeColor={getDimensionColor(result.dimensionLevels[key as keyof typeof result.dimensionLevels])}
+                      showInfo={false}
+                      strokeWidth={10}
+                      style={{ marginBottom: 10 }}
+                    />
+                  </DimensionProgress>
+                ))}
+              </Col>
+            </Row>
 
-        {/* 详细分析 */}
-        <SectionTitle level={2}>深度分析</SectionTitle>
-        <Row gutter={[24, 24]}>
-          <Col xs={24}>
-            <Card title="推荐类型特征" style={{ borderRadius: 12 }}>
-              <Row gutter={[16, 16]}>
-                <Col xs={24} md={8}>
-                  <Title level={4}>性格特征</Title>
-                  <TagContainer>
-                    {result.mainType.characteristics.personality.map((trait, index) => (
-                      <Tag key={index} color="blue">{trait}</Tag>
+            <SectionCard title="关系中的优势与成长">
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={12}>
+                  <Title level={4}>
+                    <CheckCircleOutlined style={{ color: '#52c41a' }} /> 你的优势
+                  </Title>
+                  <Space wrap>
+                    {result.emotionalType.strengths.map((strength, index) => (
+                      <TraitTag key={index} className="strength">{strength}</TraitTag>
                     ))}
-                  </TagContainer>
+                  </Space>
                 </Col>
-                <Col xs={24} md={8}>
-                  <Title level={4}>价值观</Title>
-                  <Paragraph>{result.mainType.characteristics.values}</Paragraph>
-                </Col>
-                <Col xs={24} md={8}>
-                  <Title level={4}>生活方式</Title>
-                  <Paragraph>{result.mainType.characteristics.lifestyle}</Paragraph>
+                <Col xs={24} md={12}>
+                  <Title level={4}>
+                    <BulbOutlined style={{ color: '#fa8c16' }} /> 成长空间
+                  </Title>
+                  <Space wrap>
+                    {result.emotionalType.growthAreas.map((area, index) => (
+                      <TraitTag key={index} className="growth">{area}</TraitTag>
+                    ))}
+                  </Space>
                 </Col>
               </Row>
+            </SectionCard>
+          </TabPane>
+
+          <TabPane tab={
+            <span>
+              <HeartOutlined />
+              理想伴侣画像
+            </span>
+          } key="2">
+            <SectionCard>
+              <Row gutter={[30, 30]}>
+                <Col xs={24} md={8}>
+                  <ScoreDisplay>
+                    <div className="score-value">
+                      {result.compatibilityAnalysis.overallCompatibility}%
+                    </div>
+                    <div className="score-label">整体匹配度</div>
+                  </ScoreDisplay>
+                </Col>
+                <Col xs={24} md={16}>
+                  <Title level={3}>TA的核心特质</Title>
+                  <Paragraph style={{ fontSize: '1.1rem' }}>
+                    {result.idealPartner.personality.uniqueCharm}
+                  </Paragraph>
+                  <Paragraph style={{ fontSize: '1rem', color: '#666' }}>
+                    <strong>爱情观：</strong>{result.idealPartner.personality.lovePhilosophy}
+                  </Paragraph>
+                </Col>
+              </Row>
+
               <Divider />
-              <Row gutter={[16, 16]}>
+
+              <Row gutter={[30, 30]}>
                 <Col xs={24} md={12}>
-                  <Title level={4}>识别信号</Title>
-                  <ul>
-                    {result.mainType.signals.earlySigns.map((signal, index) => (
-                      <li key={index}>{signal}</li>
+                  <Title level={4}>
+                    <ThunderboltOutlined /> 闪光点
+                  </Title>
+                  <TipList>
+                    {result.idealPartner.personality.coreStrengths.map((strength, index) => (
+                      <li key={index}>
+                        <CheckCircleOutlined />
+                        {strength}
+                      </li>
                     ))}
-                  </ul>
+                  </TipList>
                 </Col>
                 <Col xs={24} md={12}>
-                  <Title level={4}>相处建议</Title>
-                  <ul>
-                    {result.mainType.tips.map((tip, index) => (
-                      <li key={index}>{tip}</li>
+                  <Title level={4}>
+                    <AlertOutlined /> 小缺点
+                  </Title>
+                  <TipList>
+                    {result.idealPartner.personality.quirks.map((quirk, index) => (
+                      <li key={index}>
+                        <AlertOutlined style={{ color: '#faadc16' }} />
+                        {quirk}
+                      </li>
                     ))}
-                  </ul>
+                  </TipList>
                 </Col>
               </Row>
-            </Card>
-          </Col>
-        </Row>
+
+              <Divider />
+
+              <Title level={4}>
+                <GiftOutlined /> TA的爱语
+              </Title>
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={12}>
+                  <HighlightBox>
+                    <Text strong>如何表达爱：</Text>
+                    <Paragraph>{result.idealPartner.loveLanguage.expression}</Paragraph>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={12}>
+                  <HighlightBox>
+                    <Text strong>如何感受爱：</Text>
+                    <Paragraph>{result.idealPartner.loveLanguage.appreciation}</Paragraph>
+                  </HighlightBox>
+                </Col>
+              </Row>
+            </SectionCard>
+
+            <SectionCard title="和TA的生活场景">
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={12}>
+                  <Title level={5}>日常相处</Title>
+                  <Paragraph>{result.idealPartner.lifestyleScenes.dailyLife}</Paragraph>
+                </Col>
+                <Col xs={24} md={12}>
+                  <Title level={5}>面对压力时</Title>
+                  <Paragraph>{result.idealPartner.lifestyleScenes.underPressure}</Paragraph>
+                </Col>
+                <Col xs={24} md={12}>
+                  <Title level={5}>庆祝时刻</Title>
+                  <Paragraph>{result.idealPartner.lifestyleScenes.celebration}</Paragraph>
+                </Col>
+                <Col xs={24} md={12}>
+                  <Title level={5}>社交圈</Title>
+                  <Paragraph>{result.idealPartner.lifestyleScenes.socialCircle}</Paragraph>
+                </Col>
+              </Row>
+            </SectionCard>
+          </TabPane>
+
+          <TabPane tab={
+            <span>
+              <CompassOutlined />
+              相处指南
+            </span>
+          } key="3">
+            <SectionCard>
+              <Title level={3}>
+                <FireOutlined /> 为什么你们如此契合
+              </Title>
+              <TipList>
+                {result.compatibilityAnalysis.matchReasons.map((reason, index) => (
+                  <li key={index}>
+                    <CheckCircleOutlined />
+                    {reason}
+                  </li>
+                ))}
+              </TipList>
+            </SectionCard>
+
+            <Title level={3}>
+              <BookOutlined /> 不同阶段的相处智慧
+            </Title>
+            <Row gutter={[20, 20]}>
+              <Col xs={24} md={12}>
+                <StageCard title="💫 初识阶段" size="small">
+                  <TipList>
+                    {result.compatibilityAnalysis.stageAdvice.initial.map((advice, index) => (
+                      <li key={index}>
+                        <EyeOutlined />
+                        {advice}
+                      </li>
+                    ))}
+                  </TipList>
+                </StageCard>
+              </Col>
+              <Col xs={24} md={12}>
+                <StageCard title="🌱 了解阶段" size="small">
+                  <TipList>
+                    {result.compatibilityAnalysis.stageAdvice.gettingToKnow.map((advice, index) => (
+                      <li key={index}>
+                        <EyeOutlined />
+                        {advice}
+                      </li>
+                    ))}
+                  </TipList>
+                </StageCard>
+              </Col>
+              <Col xs={24} md={12}>
+                <StageCard title="🏠 稳定交往" size="small">
+                  <TipList>
+                    {result.compatibilityAnalysis.stageAdvice.stable.map((advice, index) => (
+                      <li key={index}>
+                        <EyeOutlined />
+                        {advice}
+                      </li>
+                    ))}
+                  </TipList>
+                </StageCard>
+              </Col>
+              <Col xs={24} md={12}>
+                <StageCard title="💎 长期发展" size="small">
+                  <TipList>
+                    {result.compatibilityAnalysis.stageAdvice.longTerm.map((advice, index) => (
+                      <li key={index}>
+                        <EyeOutlined />
+                        {advice}
+                      </li>
+                    ))}
+                  </TipList>
+                </StageCard>
+              </Col>
+            </Row>
+          </TabPane>
+
+          <TabPane tab={
+            <span>
+              <BulbOutlined />
+              个人成长
+            </span>
+          } key="4">
+            <SectionCard>
+              <Title level={3}>发挥你的优势</Title>
+              {result.personalGrowth.advantageLeverage.map((item, index) => (
+                <HighlightBox key={index}>
+                  <Text strong style={{ color: '#1890ff' }}>{item.strength}</Text>
+                  <Paragraph style={{ marginTop: 10 }}>{item.application}</Paragraph>
+                </HighlightBox>
+              ))}
+            </SectionCard>
+
+            <SectionCard>
+              <Title level={3}>成长练习</Title>
+              <Timeline>
+                {result.personalGrowth.growthExercises.map((exercise, index) => (
+                  <Timeline.Item key={index} color="green">
+                    <Text strong>{exercise.area}</Text>
+                    <Paragraph>{exercise.practice}</Paragraph>
+                    <Text type="secondary">频率：{exercise.frequency}</Text>
+                  </Timeline.Item>
+                ))}
+              </Timeline>
+            </SectionCard>
+
+            <SectionCard>
+              <Title level={3}>需要留意的盲区</Title>
+              {result.personalGrowth.blindSpots.map((blindSpot, index) => (
+                <Card key={index} size="small" style={{ marginBottom: 15, backgroundColor: '#fff7e6' }}>
+                  <Row gutter={[10, 10]}>
+                    <Col xs={24} md={8}>
+                      <Text strong style={{ color: '#fa8c16' }}>{blindSpot.blindSpot}</Text>
+                    </Col>
+                    <Col xs={24} md={8}>
+                      <Text type="secondary">影响：{blindSpot.impact}</Text>
+                    </Col>
+                    <Col xs={24} md={8}>
+                      <Text style={{ color: '#52c41a' }}>解决：{blindSpot.solution}</Text>
+                    </Col>
+                  </Row>
+                </Card>
+              ))}
+            </SectionCard>
+          </TabPane>
+
+          <TabPane tab={
+            <span>
+              <TeamOutlined />
+              遇见TA
+            </span>
+          } key="5">
+            <SectionCard>
+              <Title level={3}>最佳相遇场所</Title>
+              <Row gutter={[15, 15]}>
+                {result.meetingGuide.bestPlaces.map((place, index) => (
+                  <Col xs={24} sm={12} md={8} key={index}>
+                    <Card size="small" style={{ textAlign: 'center', backgroundColor: '#f0f5ff' }}>
+                      <TeamOutlined style={{ fontSize: 24, color: '#1890ff', marginBottom: 10 }} />
+                      <div>{place}</div>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </SectionCard>
+
+            <Row gutter={[30, 30]}>
+              <Col xs={24} md={12}>
+                <SectionCard title="✨ 积极信号">
+                  <TipList>
+                    {result.meetingGuide.recognitionSignals.positive.map((signal, index) => (
+                      <li key={index}>
+                        <CheckCircleOutlined />
+                        {signal}
+                      </li>
+                    ))}
+                  </TipList>
+                </SectionCard>
+              </Col>
+              <Col xs={24} md={12}>
+                <SectionCard title="⚠️ 需要警惕">
+                  <TipList>
+                    {result.meetingGuide.recognitionSignals.warning.map((warning, index) => (
+                      <li key={index}>
+                        <AlertOutlined style={{ color: '#ff4d4f' }} />
+                        {warning}
+                      </li>
+                    ))}
+                  </TipList>
+                </SectionCard>
+              </Col>
+            </Row>
+
+            <SectionCard>
+              <Title level={3}>吸引TA的策略</Title>
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong>自然展示</Text>
+                    <Paragraph>{result.meetingGuide.attractionStrategies.naturalDisplay}</Paragraph>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong>创造机会</Text>
+                    <Paragraph>{result.meetingGuide.attractionStrategies.createOpportunities}</Paragraph>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong>深度连接</Text>
+                    <Paragraph>{result.meetingGuide.attractionStrategies.deepConnection}</Paragraph>
+                  </HighlightBox>
+                </Col>
+              </Row>
+            </SectionCard>
+          </TabPane>
+        </Tabs>
 
         {/* 操作按钮 */}
-        <div style={{ textAlign: 'center', marginTop: 40 }}>
+        <div style={{ textAlign: 'center', marginTop: 50, padding: '30px 0', borderTop: '1px solid #f0f0f0' }}>
           <ActionButton type="primary" size="large" onClick={onRestart}>
+            <ThunderboltOutlined />
             重新测评
           </ActionButton>
           <ActionButton size="large" onClick={() => window.print()}>
-            打印报告
+            <BookOutlined />
+            保存报告
           </ActionButton>
         </div>
       </ResultCard>

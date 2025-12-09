@@ -1,5 +1,6 @@
-import { Dimensions, PartnerType } from '../types';
+import { Dimensions, PartnerType, TestResult } from '../types';
 import { calculateDifference, calculateCompatibility } from './calculator';
+import { getEmotionalType, generateIdealPartnerProfile, generateCompatibilityAnalysis, generatePersonalGrowthGuide, generateMeetingGuide } from './reportGenerator';
 
 export interface CompatibilityResult {
   type: PartnerType;
@@ -88,5 +89,44 @@ export function matchPartnerTypes(
     mainType,
     avoidType,
     compatibilityRanking: compatibilityResults
+  };
+}
+
+// 生成完整的测评结果
+export function generateTestResult(
+  userProfile: Dimensions,
+  dimensionLevels: TestResult['dimensionLevels'],
+  partnerTypes: PartnerType[]
+): TestResult {
+  // 获取基础匹配结果
+  const matchingResult = matchPartnerTypes(userProfile, partnerTypes);
+
+  // 获取用户情感类型
+  const emotionalType = getEmotionalType(userProfile);
+
+  // 生成理想伴侣画像
+  const idealPartner = generateIdealPartnerProfile(matchingResult.mainType, userProfile);
+
+  // 生成匹配度分析
+  const compatibilityAnalysis = generateCompatibilityAnalysis(userProfile, matchingResult.mainType);
+
+  // 生成个人成长指南
+  const personalGrowth = generatePersonalGrowthGuide(emotionalType, userProfile);
+
+  // 生成相遇指南
+  const meetingGuide = generateMeetingGuide(matchingResult.mainType);
+
+  return {
+    dimensions: userProfile,
+    dimensionLevels,
+    emotionalType,
+    idealPartner,
+    compatibilityAnalysis,
+    personalGrowth,
+    meetingGuide,
+    mainType: matchingResult.mainType,
+    avoidType: matchingResult.avoidType,
+    compatibilityRanking: matchingResult.compatibilityRanking,
+    testDate: new Date()
   };
 }

@@ -45,6 +45,94 @@ export interface PartnerType {
   tips: string[];
 }
 
+// 用户的情感类型
+export interface EmotionalType {
+  id: string;
+  name: string;
+  description: string;
+  attachmentStyle: 'secure' | 'anxious' | 'avoidant' | 'disorganized';
+  emotionalPattern: string;
+  loveLanguage: string[];
+  strengths: string[];
+  growthAreas: string[];
+  relationshipAdvantages: string[];
+  potentialChallenges: string[];
+}
+
+// 扩展的匹配度分析
+export interface CompatibilityAnalysis {
+  overallCompatibility: number;
+  dimensionCompatibility: {
+    dimension: keyof Dimensions;
+    score: number;
+    analysis: string;
+  }[];
+  matchReasons: string[];
+  complementaryAspects: string[];
+  potentialChallenges: string[];
+  stageAdvice: {
+    initial: string[];
+    gettingToKnow: string[];
+    stable: string[];
+    longTerm: string[];
+  };
+}
+
+// 伴侣画像详情
+export interface IdealPartnerProfile {
+  baseType: PartnerType;
+  personality: {
+    coreStrengths: string[];
+    quirks: string[];
+    uniqueCharm: string;
+    lovePhilosophy: string;
+  };
+  loveLanguage: {
+    expression: string;
+    appreciation: string;
+    values: string[];
+  };
+  lifestyleScenes: {
+    dailyLife: string;
+    underPressure: string;
+    celebration: string;
+    socialCircle: string;
+  };
+  imperfections: string[];
+}
+
+// 个人成长指南
+export interface PersonalGrowthGuide {
+  advantageLeverage: {
+    strength: string;
+    application: string;
+  }[];
+  growthExercises: {
+    area: string;
+    practice: string;
+    frequency: string;
+  }[];
+  blindSpots: {
+    blindSpot: string;
+    impact: string;
+    solution: string;
+  }[];
+}
+
+// 相遇指南
+export interface MeetingGuide {
+  bestPlaces: string[];
+  recognitionSignals: {
+    positive: string[];
+    warning: string[];
+  };
+  attractionStrategies: {
+    naturalDisplay: string;
+    createOpportunities: string;
+    deepConnection: string;
+  };
+}
+
 // 测评结果
 export interface TestResult {
   userId?: string;
@@ -56,6 +144,11 @@ export interface TestResult {
     R: '极高' | '较高' | '中等' | '较低' | '很低';
     E: '极高' | '较高' | '中等' | '较低' | '很低';
   };
+  emotionalType: EmotionalType;
+  idealPartner: IdealPartnerProfile;
+  compatibilityAnalysis: CompatibilityAnalysis;
+  personalGrowth: PersonalGrowthGuide;
+  meetingGuide: MeetingGuide;
   mainType: PartnerType;
   avoidType: PartnerType;
   compatibilityRanking: Array<{

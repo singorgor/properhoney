@@ -4,7 +4,7 @@ import { Button, Card, Radio, Progress, Typography, Space, message } from 'antd'
 import styled from 'styled-components';
 import { questions } from '../data/questions';
 import { calculateDimensions, normalizeScores, getDimensionLevel } from '../utils/calculator';
-import { matchPartnerTypes } from '../utils/matcher';
+import { generateTestResult } from '../utils/matcher';
 import { partnerTypes } from '../data/partnerTypes';
 import { UserAnswer, TestResult } from '../types';
 
@@ -172,23 +172,18 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
       const rawScores = calculateDimensions(finalAnswers, questions);
       const normalizedScores = normalizeScores(rawScores);
 
-      // 计算匹配
-      const { mainType, avoidType, compatibilityRanking } = matchPartnerTypes(normalizedScores, partnerTypes);
-
-      const result: TestResult = {
-        dimensions: normalizedScores,
-        dimensionLevels: {
+      // 生成完整的测试结果
+      const result: TestResult = generateTestResult(
+        normalizedScores,
+        {
           S: getDimensionLevel(normalizedScores.S),
           A: getDimensionLevel(normalizedScores.A),
           G: getDimensionLevel(normalizedScores.G),
           R: getDimensionLevel(normalizedScores.R),
           E: getDimensionLevel(normalizedScores.E)
         },
-        mainType,
-        avoidType,
-        compatibilityRanking,
-        testDate: new Date()
-      };
+        partnerTypes
+      );
 
       onComplete(finalAnswers, result);
       history.push('/result');
