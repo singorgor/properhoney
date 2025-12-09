@@ -135,8 +135,17 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
   const companionProfiles: Record<string, Partial<IdealPartnerProfile>> = {
     'stable-harbor': {
       personality: {
-        coreStrengths: ['沉稳可靠', '执行力强', '情绪稳定', '责任感强'],
-        quirks: ['可能有点固执', '不太会制造惊喜', '偶尔显得木讷'],
+        coreStrengths: [
+          '沉稳可靠：无论遇到什么困难，都能保持冷静，给你最坚实的依靠',
+          '执行力强：说到做到，承诺的事情一定会努力兑现，让人安心',
+          '情绪稳定：不会因为小事而情绪波动，能提供持续稳定的情感支持',
+          '责任感强：对关系和家庭有强烈的责任心，愿意承担起应有的责任'
+        ],
+        quirks: [
+          '可能有点固执：一旦形成自己的看法，不太容易改变，需要耐心沟通',
+          '不太会制造惊喜：更注重实际的关心，可能缺少浪漫的惊喜表现',
+          '偶尔显得木讷：不善于用花言巧语表达爱意，但行动上会默默付出'
+        ],
         uniqueCharm: '用默默的行动证明爱意，虽然不善言辞但内心温暖',
         lovePhilosophy: '爱情是细水长流的陪伴，是用行动兑现的承诺'
       },
@@ -155,8 +164,17 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
     },
     'shoulder-to-shoulder': {
       personality: {
-        coreStrengths: ['目标明确', '积极进取', '支持成长', '理性务实'],
-        quirks: ['可能工作狂', '有时忽视情感', '容易把感情当项目'],
+        coreStrengths: [
+          '目标明确：对自己的人生有清晰规划，并愿意与你一起制定共同目标',
+          '积极进取：不断追求进步，会带动你也成为更好的自己',
+          '支持成长：真心支持你的事业发展，愿意为你提供资源和帮助',
+          '理性务实：用实际行动解决问题，而不是空谈或不切实际的幻想'
+        ],
+        quirks: [
+          '可能工作狂：过于专注于事业，有时会忽视情感的细节需求',
+          '有时忽视情感：习惯用逻辑思考，可能无法及时察觉你的情绪变化',
+          '容易把感情当项目：有时会过度理性地分析关系，缺少一些浪漫'
+        ],
         uniqueCharm: '把你当作人生合伙人，愿意和你一起打拼更好的未来',
         lovePhilosophy: '最好的爱情是一起成长，互相成就，成为更好的自己'
       },
@@ -175,8 +193,17 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
     },
     'nurturing-caregiver': {
       personality: {
-        coreStrengths: ['细心体贴', '善于照顾', '情感丰富', '有耐心'],
-        quirks: ['可能过度付出', '容易忽视自己', '有点控制欲'],
+        coreStrengths: [
+          '细心体贴：能敏锐察觉你的情绪变化和需求，给予及时的关怀',
+          '善于照顾：无论是生活起居还是情感支持，都能为你提供周到照料',
+          '情感丰富：内心世界丰富多彩，能与你进行深度的情感交流',
+          '有耐心：在你遇到困难或情绪低落时，能耐心陪伴和支持'
+        ],
+        quirks: [
+          '可能过度付出：有时会牺牲自己的需求来满足你，需要学会平衡',
+          '容易忽视自己：过于关注别人，可能会忽略自己的感受和需要',
+          '有点控制欲：因为太想照顾你，有时会过度干预你的决定'
+        ],
         uniqueCharm: '总能察觉你的需要，在你需要之前就已经准备好',
         lovePhilosophy: '爱就是细心的照料和无私的付出，让你感受到家的温暖'
       },
@@ -195,8 +222,17 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
     },
     'soul-conversationalist': {
       personality: {
-        coreStrengths: ['思想深刻', '善于交流', '独立自主', '精神丰富'],
-        quirks: ['可能过于理想化', '有点孤傲', '不善于处理琐事'],
+        coreStrengths: [
+          '思想深刻：对人生有独特的见解，能与你进行有深度的精神交流',
+          '善于交流：不仅善于表达，更懂得倾听，能理解你最深层的想法',
+          '独立自主：有自己的精神世界，不会过度依赖你，让关系保持健康',
+          '精神丰富：内心世界丰富多彩，总能为关系带来新的思考和启发'
+        ],
+        quirks: [
+          '可能过于理想化：有时会追求完美，对现实关系有过高的期待',
+          '有点孤傲：因为精神世界丰富，有时会显得不太合群',
+          '不善于处理琐事：更关注精神层面，可能忽视日常生活的细节'
+        ],
         uniqueCharm: '能和你聊到深夜，理解你最深层的想法和感受',
         lovePhilosophy: '灵魂的共鸣胜过一切，好的关系是两个独立灵魂的相互照亮'
       },
@@ -215,8 +251,17 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
     },
     'free-companion': {
       personality: {
-        coreStrengths: ['独立自主', '边界清晰', '轻松灵活', '尊重他人'],
-        quirks: ['可能不够主动', '有点难以捉摸', '保持距离'],
+        coreStrengths: [
+          '独立自主：有自己的生活和追求，不会过度依赖你，让关系更健康',
+          '边界清晰：懂得尊重个人空间，不会过度干涉你的私事和决定',
+          '轻松灵活：不会给关系太大压力，能够包容和适应变化',
+          '尊重他人：真心尊重你的选择和生活方式，不会试图改变你'
+        ],
+        quirks: [
+          '可能不够主动：因为尊重你的空间，有时会让你觉得不够被关心',
+          '有点难以捉摸：需要自己的空间思考，有时会显得神秘或疏离',
+          '保持距离：为了避免过度依赖，可能会在关系中保持一定距离感'
+        ],
         uniqueCharm: '给你足够的自由，让关系轻松而自然',
         lovePhilosophy: '好的关系是两个完整的人选择在一起，而不是彼此需要'
       },
@@ -232,6 +277,93 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         socialCircle: '多样化，尊重每个人的生活方式'
       },
       imperfections: ['可能显得冷淡', '不够投入', '难以预测', '缺乏安全感']
+    },
+    'rational-partner': {
+      personality: {
+        coreStrengths: [
+          '逻辑清晰：善于分析问题，能够理性看待和处理关系中的各种情况',
+          '高效执行：做事有条理，能够高效地解决生活和关系中的实际问题',
+          '冷静稳重：遇到困难不会慌乱，能为你提供稳定的支持和方向',
+          '值得信赖：言行一致，说到做到，是可靠的人生伙伴'
+        ],
+        quirks: [
+          '情感表达较弱：不善于用言语表达情感，可能让你感觉不够浪漫',
+          '过于理性：有时会过度分析，忽视情感的细微变化',
+          '缺乏惊喜：更注重实际效果，可能缺少一些生活情趣'
+        ],
+        uniqueCharm: '用理性的方式爱你，为你解决实际问题，是生活的坚实后盾',
+        lovePhilosophy: '爱情是理性的选择和责任的承担，是两个人共同面对生活的智慧'
+      },
+      loveLanguage: {
+        expression: '通过解决问题和提供实际支持来表达关心',
+        appreciation: '当你认可他们的理性分析和解决方案时',
+        values: ['理性', '效率', '解决', '支持']
+      },
+      lifestyleScenes: {
+        dailyLife: '生活有序，注重计划和效率，会为你解决实际问题',
+        underPressure: '会冷静分析情况，寻找最佳解决方案',
+        celebration: '可能准备实用的礼物，或者安排有意义的活动',
+        socialCircle: '多是理性思考的朋友，重视深度交流'
+      },
+      imperfections: ['不够浪漫', '过于理性', '忽视情感', '缺乏惊喜']
+    },
+    'reliable-pragmatist': {
+      personality: {
+        coreStrengths: [
+          '踏实稳重：一步一个脚印，不好高骛远，给你稳稳的幸福',
+          '执行力强：说到做到，不会空谈，用实际行动证明自己的爱',
+          '责任感强：对家庭和关系有强烈的责任感，是值得依靠的港湾',
+          '规划清晰：对未来有明确规划，并愿意为之持续努力'
+        ],
+        quirks: [
+          '可能不够浪漫：更注重实际，有时会忽略情感的表达需求',
+          '改变较慢：习惯稳定的生活，对变化可能有些抵触',
+          '有点严肃：过于注重结果，可能缺少一些轻松幽默的时刻'
+        ],
+        uniqueCharm: '用踏实的行动为你构建未来，是那个最靠谱的伴侣',
+        lovePhilosophy: '爱情是责任和承诺的体现，是用行动创造的美好生活'
+      },
+      loveLanguage: {
+        expression: '通过负责任的态度和实际的行动来表达爱意',
+        appreciation: '当你感谢他们的可靠和担当时',
+        values: ['责任', '承诺', '实际', '稳定']
+      },
+      lifestyleScenes: {
+        dailyLife: '生活规律有序，会为未来做详细规划并执行',
+        underPressure: '会更加努力地承担责任，用行动解决问题',
+        celebration: '会准备有意义的礼物，重视实际的纪念价值',
+        socialCircle: '多是可靠务实的朋友，重视长期的友谊'
+      },
+      imperfections: ['不够浪漫', '改变较慢', '过于严肃', '缺乏灵活性']
+    },
+    'emotional-resonator': {
+      personality: {
+        coreStrengths: [
+          '情感丰富：内心世界多彩，能与你分享各种美妙的情感体验',
+          '共情力强：能深刻理解你的感受，与你产生强烈的情感共鸣',
+          '表达力佳：善于用言语和行动表达爱意，让你时刻感受到被爱',
+          '创造浪漫：懂得为关系增添情趣和惊喜，让生活充满色彩'
+        ],
+        quirks: [
+          '可能过于敏感：情绪波动较大，有时会过度解读他人的言行',
+          '需要较多关注：渴望被理解和回应，有时会给对方压力',
+          '容易情绪化：在压力下可能被情绪主导，影响理性判断'
+        ],
+        uniqueCharm: '让你感受到被深深理解和珍视，是情感的完美知己',
+        lovePhilosophy: '爱情是灵魂的共鸣，是情感的深度连接，是生命最美的体验'
+      },
+      loveLanguage: {
+        expression: '通过深度的情感交流和浪漫的表达来传递爱意',
+        appreciation: '当你回应他们的情感表达并产生共鸣时',
+        values: ['情感', '浪漫', '表达', '共鸣']
+      },
+      lifestyleScenes: {
+        dailyLife: '生活充满情感色彩，会创造各种浪漫的时刻',
+        underPressure: '需要情感的支持和理解，会寻求深度的交流',
+        celebration: '会精心准备浪漫的惊喜，让每个日子都特别',
+        socialCircle: '多是情感丰富的朋友，重视深度的情感连接'
+      },
+      imperfections: ['过于敏感', '情绪化', '需要关注', '缺乏理性']
     }
   };
 

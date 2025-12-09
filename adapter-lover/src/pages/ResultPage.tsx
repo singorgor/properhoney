@@ -213,10 +213,11 @@ const TipList = styled.ul`
   padding: 0;
 
   li {
-    padding: 12px 0;
+    padding: 15px 0;
     border-bottom: 1px solid #f0f0f0;
     position: relative;
     padding-left: 35px;
+    line-height: 1.6;
 
     &:last-child {
       border-bottom: none;
@@ -225,8 +226,18 @@ const TipList = styled.ul`
     .anticon {
       position: absolute;
       left: 0;
-      top: 14px;
+      top: 18px;
       color: #52c41a;
+    }
+
+    .trait-highlight {
+      font-weight: 600;
+      color: #1890ff;
+    }
+
+    .trait-description {
+      color: #666;
+      margin-top: 5px;
     }
   }
 `;
@@ -329,6 +340,21 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
       'E': '情绪表达偏好'
     };
     return names[key];
+  };
+
+  // 格式化特质文本，分离标题和描述
+  const formatTrait = (trait: string) => {
+    const colonIndex = trait.indexOf('：');
+    if (colonIndex > -1) {
+      return {
+        title: trait.substring(0, colonIndex),
+        description: trait.substring(colonIndex + 1)
+      };
+    }
+    return {
+      title: trait,
+      description: ''
+    };
   };
 
   return (
@@ -449,12 +475,22 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
                     <ThunderboltOutlined /> 闪光点
                   </Title>
                   <TipList>
-                    {result.idealPartner.personality.coreStrengths.map((strength, index) => (
-                      <li key={index}>
-                        <CheckCircleOutlined />
-                        {strength}
-                      </li>
-                    ))}
+                    {result.idealPartner.personality.coreStrengths.map((strength, index) => {
+                      const trait = formatTrait(strength);
+                      return (
+                        <li key={index}>
+                          <CheckCircleOutlined />
+                          {trait.description ? (
+                            <>
+                              <span className="trait-highlight">{trait.title}</span>
+                              <div className="trait-description">{trait.description}</div>
+                            </>
+                          ) : (
+                            strength
+                          )}
+                        </li>
+                      );
+                    })}
                   </TipList>
                 </Col>
                 <Col xs={24} md={12}>
@@ -462,12 +498,22 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
                     <AlertOutlined /> 小缺点
                   </Title>
                   <TipList>
-                    {result.idealPartner.personality.quirks.map((quirk, index) => (
-                      <li key={index}>
-                        <AlertOutlined style={{ color: '#faadc16' }} />
-                        {quirk}
-                      </li>
-                    ))}
+                    {result.idealPartner.personality.quirks.map((quirk, index) => {
+                      const trait = formatTrait(quirk);
+                      return (
+                        <li key={index}>
+                          <AlertOutlined style={{ color: '#fa8c16' }} />
+                          {trait.description ? (
+                            <>
+                              <span className="trait-highlight">{trait.title}</span>
+                              <div className="trait-description">{trait.description}</div>
+                            </>
+                          ) : (
+                            quirk
+                          )}
+                        </li>
+                      );
+                    })}
                   </TipList>
                 </Col>
               </Row>
