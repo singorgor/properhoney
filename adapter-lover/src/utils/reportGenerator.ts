@@ -390,6 +390,554 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
   };
 }
 
+// 生成相处指南
+export function generateRelationshipGuide(mainType: any, userDimensions: Dimensions): {
+  communicationStyle: {
+    preferred: string[];
+    avoid: string[];
+    tips: string[];
+  };
+  conflictResolution: {
+    commonTriggers: string[];
+    solutions: string[];
+    prevention: string[];
+  };
+  emotionalNeeds: {
+    userNeeds: string[];
+    partnerNeeds: string[];
+    balance: string[];
+  };
+  growthAreas: {
+    together: string[];
+    individual: string[];
+  };
+} {
+  const relationshipGuides: Record<string, any> = {
+    'stable-harbor': {
+      communicationStyle: {
+        preferred: [
+          '平和、稳定的对话方式，避免激烈的争论',
+          '实际具体的表达，而不是抽象的情感描述',
+          '定期的深度交流时间，建立安全感'
+        ],
+        avoid: [
+          '突然的情感爆发或极端表达',
+          '过多的变化和不确定性',
+          '强迫快速做出决定'
+        ],
+        tips: [
+          '用"我觉得"代替"你应该"，减少压力感',
+          '给对方时间思考和处理情绪',
+          '通过行动证明比语言承诺更重要'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '感觉被忽视或不被重视',
+          '计划突然被改变',
+          '情感需求被忽视'
+        ],
+        solutions: [
+          '冷静下来后再讨论问题',
+          '给彼此空间和时间',
+          '寻求实际可行的解决方案'
+        ],
+        prevention: [
+          '定期检查彼此的状态',
+          '提前沟通重要决定',
+          '保持生活的一致性和可预测性'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '安全感和稳定性',
+          '被需要和被依赖的感觉',
+          '实际的支持和陪伴'
+        ],
+        partnerNeeds: [
+          '被信任和被依靠',
+          '情感表达的直接性',
+          '生活的一致性和规律'
+        ],
+        balance: [
+          '在稳定中适度增加新鲜感',
+          '在理性中保留情感的温度',
+          '在责任中也要照顾自己'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更直接地表达情感需求',
+          '一起尝试新的活动和体验',
+          '培养共同的兴趣爱好'
+        ],
+        individual: [
+          '学会适度表达脆弱',
+          '培养更灵活的思维模式',
+          '增加生活的情趣和惊喜'
+        ]
+      }
+    },
+    'shoulder-to-shoulder': {
+      communicationStyle: {
+        preferred: [
+          '目标导向的讨论，关于未来规划',
+          '高效直接的沟通，不拖泥带水',
+          '理性分析问题，寻找解决方案'
+        ],
+        avoid: [
+          '过度的情感宣泄',
+          '没有目的的长谈',
+          '模糊不清的表达'
+        ],
+        tips: [
+          '把情感问题也当作"项目"来分析和解决',
+          '定期复盘关系发展状况',
+          '用数据和事实支撑观点'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '感觉对方不够上进或进步缓慢',
+          '目标和计划不一致',
+          '情感需求被忽视'
+        ],
+        solutions: [
+          '设定共同的目标和里程碑',
+          '制定明确的行动计划',
+          '定期检查进度和调整策略'
+        ],
+        prevention: [
+          '定期沟通个人发展和职业规划',
+          '保持对彼此目标的理解和支持',
+          '在忙碌中也要留出情感时间'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '被理解和支持事业追求',
+          '共同成长和进步',
+          '高效和谐的关系'
+        ],
+        partnerNeeds: [
+          '对事业的理解和支持',
+          '个人发展的空间',
+          '成就得到认可'
+        ],
+        balance: [
+          '在追求目标时也要关注情感',
+          '在效率中保留温度',
+          '在共同成长中保持独立性'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更多关注情感而非仅关注结果',
+          '培养工作之外的生活情趣',
+          '学会在关系中放松和享受'
+        ],
+        individual: [
+          '提高情感表达能力',
+          '学会享受过程而非仅关注结果',
+          '培养更多的生活情趣'
+        ]
+      }
+    },
+    'nurturing-caregiver': {
+      communicationStyle: {
+        preferred: [
+          '温暖关怀的对话，关心对方的感受',
+          '细节的关注和体贴的表达',
+          '情感深度交流'
+        ],
+        avoid: [
+          '冷漠或忽视对方的情感',
+          '过于理性或批判性的言辞',
+          '急于解决问题而不先理解感受'
+        ],
+        tips: [
+          '学会接受他人的照顾和关爱',
+          '在关心他人的同时也要表达自己的需求',
+          '避免过度付出而忽视自己'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '感觉付出没有得到回报',
+          '被忽视或不被感激',
+          '自己的需求被忽视'
+        ],
+        solutions: [
+          '坦诚表达自己的感受和需求',
+          '学会设立健康的边界',
+          '寻求平衡的付出和接受'
+        ],
+        prevention: [
+          '定期表达感激和欣赏',
+          '主动沟通自己的需求',
+          '学会适度自私，照顾自己'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '被感激和被欣赏',
+          '情感连接和深度交流',
+          '照顾和被照顾的平衡'
+        ],
+        partnerNeeds: [
+          '被理解和被接纳',
+          '细致的关怀和体贴',
+          '情感的温暖回应'
+        ],
+        balance: [
+          '学会接受他人的关爱',
+          '在照顾他人时也要照顾自己',
+          '在给予中也要学会接受'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更理性地处理问题',
+          '培养独立性和自我边界',
+          '在关爱中保持适度距离'
+        ],
+        individual: [
+          '学会说"不"并设立边界',
+          '发展自己的兴趣爱好',
+          '减少对他人认可的依赖'
+        ]
+      }
+    },
+    'soul-conversationalist': {
+      communicationStyle: {
+        preferred: [
+          '深度思想和精神的交流',
+          '探讨抽象概念和人生哲学',
+          '诚实而真实的自我表达'
+        ],
+        avoid: [
+          '肤浅的闲聊和无意义对话',
+          '过度的情感宣泄',
+          '被强迫立即做出决定'
+        ],
+        tips: [
+          '给彼此足够的思考时间',
+          '尊重不同的观点和想法',
+          '在精神交流中也要关注现实生活'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '感觉不被理解或被误解',
+          '价值观和理念的冲突',
+          '过度理性分析而忽视情感'
+        ],
+        solutions: [
+          '从思想和理念层面寻找共识',
+          '给彼此空间和时间思考',
+          '通过深度对话理解对方观点'
+        ],
+        prevention: [
+          '定期进行深度交流',
+          '在理性分析中关注情感',
+          '尊重并欣赏彼此的差异'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '思想上的理解和共鸣',
+          '精神上的连接和交流',
+          '独立思考的空间'
+        ],
+        partnerNeeds: [
+          '深度的精神交流',
+          '思想上的启发和成长',
+          '独立性和尊重'
+        ],
+        balance: [
+          '在精神交流中也要关注现实',
+          '在独立中保持连接',
+          '在理性中保留情感'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更多关注生活的实际方面',
+          '培养更多的情趣和轻松感',
+          '在思想交流中加入更多情感'
+        ],
+        individual: [
+          '学会享受简单的生活乐趣',
+          '培养更多的现实生活技能',
+          '在思考中也要行动'
+        ]
+      }
+    },
+    'free-companion': {
+      communicationStyle: {
+        preferred: [
+          '轻松自然的对话，没有压力',
+          '尊重个人空间和独立性',
+          '灵活而不过度的交流'
+        ],
+        avoid: [
+          '过度的情感依赖',
+          '频繁的联系和监控',
+          '试图改变对方的想法'
+        ],
+        tips: [
+          '在需要时主动表达关心',
+          '尊重彼此的独立空间',
+          '在关系中保持个人生活'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '感觉被控制或被束缚',
+          '个人空间被侵犯',
+          '过多的情感要求'
+        ],
+        solutions: [
+          '给彼此空间和时间冷静',
+          '在各自冷静后再沟通',
+          '寻求平衡而非妥协'
+        ],
+        prevention: [
+          '尊重个人边界和空间',
+          '保持适度的联系频率',
+          '在关系中保持独立性'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '个人空间和自由',
+          '被理解和被尊重',
+          '轻松无压力的关系'
+        ],
+        partnerNeeds: [
+          '独立性和自主权',
+          '适度的关心和支持',
+          '不干涉的生活方式'
+        ],
+        balance: [
+          '在独立中保持适度连接',
+          '在自由中保持责任',
+          '在轻松中保持关心'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更主动地表达关心',
+          '培养更多的共同活动',
+          '在独立中建立更深的连接'
+        ],
+        individual: [
+          '学会适度依赖和表达需求',
+          '培养更深的情感表达能力',
+          '在独立中学会接受帮助'
+        ]
+      }
+    },
+    'rational-partner': {
+      communicationStyle: {
+        preferred: [
+          '逻辑清晰、条理分明的讨论',
+          '基于事实和数据的分析',
+          '解决问题的理性方法'
+        ],
+        avoid: [
+          '过度的情感表达',
+          '模糊不清的表达',
+          '情绪化的反应'
+        ],
+        tips: [
+          '学会倾听情感而不急于解决',
+          '在理性分析中加入情感考虑',
+          '用简单直接的方式表达关心'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '情感需求被忽视',
+          '过度理性化问题',
+          '缺乏情感回应'
+        ],
+        solutions: [
+          '先理解情感再解决问题',
+          '寻求逻辑和情感的平衡',
+          '提供实际的解决方案'
+        ],
+        prevention: [
+          '定期关注彼此的情感状态',
+          '学会表达基本的情感支持',
+          '在分析中考虑情感因素'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '逻辑上的理解和支持',
+          '实际的帮助和解决方案',
+          '高效和谐的关系'
+        ],
+        partnerNeeds: [
+          '理性的分析和建议',
+          '实际的行动和结果',
+          '清晰明确的表达'
+        ],
+        balance: [
+          '在理性中保留情感',
+          '在分析中关注感受',
+          '在效率中保持温度'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更多的情感表达',
+          '培养更多的浪漫和情趣',
+          '在解决问题中关注情感'
+        ],
+        individual: [
+          '提高情感表达能力',
+          '学会享受无目的的情感交流',
+          '培养更多的感性思维'
+        ]
+      }
+    },
+    'reliable-pragmatist': {
+      communicationStyle: {
+        preferred: [
+          '实际、具体的讨论',
+          '关于计划和执行的话题',
+          '负责任和可靠的对话'
+        ],
+        avoid: [
+          '空洞的承诺和夸大的言辞',
+          '过于理想化的话题',
+          '不切实际的幻想'
+        ],
+        tips: [
+          '说到做到，用行动证明',
+          '在现实基础上适度梦想',
+          '培养适当的幽默感'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '承诺没有兑现',
+          '计划被突然改变',
+          '感觉对方不够务实'
+        ],
+        solutions: [
+          '制定实际可行的计划',
+          '坚持到底，不轻易放弃',
+          '寻求务实的解决方案'
+        ],
+        prevention: [
+          '设定合理的目标和期望',
+          '定期检查进展和调整',
+          '在务实中保持适度的灵活性'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '可靠性和承诺',
+          '实际的行动和支持',
+          '安全感和稳定性'
+        ],
+        partnerNeeds: [
+          '责任感和承诺',
+          '实际的行动和结果',
+          '稳定和可预测性'
+        ],
+        balance: [
+          '在务实中保留一些浪漫',
+          '在责任中保持一些轻松',
+          '在现实中保留一些梦想'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更多的灵活性',
+          '培养更多的情趣和惊喜',
+          '在责任中保持轻松'
+        ],
+        individual: [
+          '学会接受不确定性',
+          '培养更多的兴趣爱好',
+          '在计划中保持一些灵活性'
+        ]
+      }
+    },
+    'emotional-resonator': {
+      communicationStyle: {
+        preferred: [
+          '丰富情感的交流',
+          '浪漫和诗意的表达',
+          '深度情感的连接'
+        ],
+        avoid: [
+          '冷漠或理性的分析',
+          '忽视情感的表达',
+          '过于实际的讨论'
+        ],
+        tips: [
+          '学会在情感中保持理性',
+          '接受现实的限制和挑战',
+          '在浪漫中保持责任'
+        ]
+      },
+      conflictResolution: {
+        commonTriggers: [
+          '情感被忽视或误解',
+          '缺乏浪漫和情调',
+          '过于理性的反应'
+        ],
+        solutions: [
+          '先处理情感再解决问题',
+          '创造情感连接的机会',
+          '用浪漫的方式化解冲突'
+        ],
+        prevention: [
+          '定期创造浪漫时刻',
+          '保持情感的深度交流',
+          '在浪漫中保持现实'
+        ]
+      },
+      emotionalNeeds: {
+        userNeeds: [
+          '情感上的深度连接',
+          '浪漫和情趣的表达',
+          '被理解和被珍视'
+        ],
+        partnerNeeds: [
+          '情感的丰富回应',
+          '浪漫的共同体验',
+          '情感的安全感'
+        ],
+        balance: [
+          '在情感中保持理性',
+          '在浪漫中保持现实',
+          '在激情中保持稳定'
+        ]
+      },
+      growthAreas: {
+        together: [
+          '学习更理性地处理问题',
+          '培养更多的实际生活技能',
+          '在情感中保持稳定'
+        ],
+        individual: [
+          '学会管理情绪波动',
+          '培养更多的理性思维',
+          '在浪漫中保持责任'
+        ]
+      }
+    }
+  };
+
+  return relationshipGuides[mainType.id] || relationshipGuides['stable-harbor'];
+}
+
 // 生成匹配度分析
 export function generateCompatibilityAnalysis(userDimensions: Dimensions, partnerType: any): CompatibilityAnalysis {
   const compatibility = 100 - calculateDifference(userDimensions, partnerType.idealProfile);

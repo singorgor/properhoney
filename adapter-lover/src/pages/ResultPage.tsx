@@ -24,7 +24,9 @@ import {
   FireOutlined,
   AlertOutlined,
   CheckCircleOutlined,
-  EyeOutlined
+  EyeOutlined,
+  MessageOutlined,
+  RocketOutlined
 } from '@ant-design/icons';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
@@ -808,71 +810,145 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
           } key="3">
             <SectionCard>
               <Title level={3}>
-                <FireOutlined /> 为什么你们如此契合
+                <MessageOutlined /> 最佳沟通方式
               </Title>
-              <TipList>
-                {result.compatibilityAnalysis.matchReasons.map((reason, index) => (
-                  <li key={index}>
-                    <CheckCircleOutlined />
-                    {reason}
-                  </li>
-                ))}
-              </TipList>
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#52c41a', fontSize: '1rem' }}>✨ 偏好的沟通</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.communicationStyle.preferred.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#fa8c16', fontSize: '1rem' }}>⚠️ 避免的沟通</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.communicationStyle.avoid.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#1890ff', fontSize: '1rem' }}>💡 沟通技巧</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.communicationStyle.tips.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+              </Row>
             </SectionCard>
 
-            <Title level={3}>
-              <BookOutlined /> 不同阶段的相处智慧
-            </Title>
-            <Row gutter={[20, 20]}>
-              <Col xs={24} md={12}>
-                <StageCard title="💫 初识阶段" size="small">
-                  <TipList>
-                    {result.compatibilityAnalysis.stageAdvice.initial.map((advice, index) => (
-                      <li key={index}>
-                        <EyeOutlined />
-                        {advice}
-                      </li>
-                    ))}
-                  </TipList>
-                </StageCard>
-              </Col>
-              <Col xs={24} md={12}>
-                <StageCard title="🌱 了解阶段" size="small">
-                  <TipList>
-                    {result.compatibilityAnalysis.stageAdvice.gettingToKnow.map((advice, index) => (
-                      <li key={index}>
-                        <EyeOutlined />
-                        {advice}
-                      </li>
-                    ))}
-                  </TipList>
-                </StageCard>
-              </Col>
-              <Col xs={24} md={12}>
-                <StageCard title="🏠 稳定交往" size="small">
-                  <TipList>
-                    {result.compatibilityAnalysis.stageAdvice.stable.map((advice, index) => (
-                      <li key={index}>
-                        <EyeOutlined />
-                        {advice}
-                      </li>
-                    ))}
-                  </TipList>
-                </StageCard>
-              </Col>
-              <Col xs={24} md={12}>
-                <StageCard title="💎 长期发展" size="small">
-                  <TipList>
-                    {result.compatibilityAnalysis.stageAdvice.longTerm.map((advice, index) => (
-                      <li key={index}>
-                        <EyeOutlined />
-                        {advice}
-                      </li>
-                    ))}
-                  </TipList>
-                </StageCard>
-              </Col>
-            </Row>
+            <SectionCard>
+              <Title level={3}>
+                <AlertOutlined /> 矛盾化解指南
+              </Title>
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#ff4d4f', fontSize: '1rem' }}>🔥 常见矛盾点</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.conflictResolution.commonTriggers.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#52c41a', fontSize: '1rem' }}>🛠️ 解决方案</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.conflictResolution.solutions.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#1890ff', fontSize: '1rem' }}>🛡️ 预防措施</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.conflictResolution.prevention.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+              </Row>
+            </SectionCard>
+
+            <SectionCard>
+              <Title level={3}>
+                <HeartOutlined /> 情感需求平衡
+              </Title>
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#722ed1', fontSize: '1rem' }}>🙋‍♂️ 你的需求</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.emotionalNeeds.userNeeds.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#eb2f96', fontSize: '1rem' }}>🙋‍♀️ 伴侣的需求</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.emotionalNeeds.partnerNeeds.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={8}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#13c2c2', fontSize: '1rem' }}>⚖️ 平衡之道</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.emotionalNeeds.balance.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+              </Row>
+            </SectionCard>
+
+            <SectionCard>
+              <Title level={3}>
+                <RocketOutlined /> 共同成长方向
+              </Title>
+              <Row gutter={[20, 20]}>
+                <Col xs={24} md={12}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#1890ff', fontSize: '1rem' }}>🤝 共同成长</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.growthAreas.together.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+                <Col xs={24} md={12}>
+                  <HighlightBox>
+                    <Text strong style={{ color: '#52c41a', fontSize: '1rem' }}>🌱 个人成长</Text>
+                    <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                      {result.relationshipGuide.growthAreas.individual.map((item, index) => (
+                        <li key={index} style={{ marginBottom: 8, lineHeight: 1.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </HighlightBox>
+                </Col>
+              </Row>
+            </SectionCard>
           </TabPane>
 
           <TabPane tab={

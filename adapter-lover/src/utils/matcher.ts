@@ -1,6 +1,6 @@
 import { Dimensions, PartnerType, TestResult } from '../types';
 import { calculateDifference, calculateCompatibility } from './calculator';
-import { getEmotionalType, generateIdealPartnerProfile, generateCompatibilityAnalysis, generatePersonalGrowthGuide, generateMeetingGuide } from './reportGenerator';
+import { getEmotionalType, generateIdealPartnerProfile, generateCompatibilityAnalysis, generatePersonalGrowthGuide, generateMeetingGuide, generateRelationshipGuide } from './reportGenerator';
 
 export interface CompatibilityResult {
   type: PartnerType;
@@ -116,6 +116,9 @@ export function generateTestResult(
   // 生成相遇指南
   const meetingGuide = generateMeetingGuide(matchingResult.mainType);
 
+  // 生成相处指南
+  const relationshipGuide = generateRelationshipGuide(matchingResult.mainType, userProfile);
+
   return {
     dimensions: userProfile,
     dimensionLevels,
@@ -124,6 +127,7 @@ export function generateTestResult(
     compatibilityAnalysis,
     personalGrowth,
     meetingGuide,
+    relationshipGuide,
     mainType: matchingResult.mainType,
     avoidType: matchingResult.avoidType,
     compatibilityRanking: matchingResult.compatibilityRanking,

@@ -108,7 +108,8 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
   }, [currentQuestionIndex, answers, currentQuestion.id]);
 
   const handleOptionSelect = (optionId: string) => {
-    if (selectedOption === optionId) return; // 防止重复选择同一个选项
+    // 如果点击的是已选中的选项，不做任何操作
+    if (selectedOption === optionId) return;
 
     setSelectedOption(optionId);
 
@@ -123,16 +124,14 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
     updatedAnswers.sort((a, b) => a.questionId - b.questionId);
     setAnswers(updatedAnswers);
 
-    // 延迟一下再跳转或提交，让用户看到选择效果
+    // 延迟一下再跳转，让用户看到选择效果（仅对非最后一题）
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
         // 不是最后一题，跳转到下一题
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption('');
-      } else {
-        // 是最后一题，自动提交
-        handleSubmit();
       }
+      // 最后一题不自动跳转，等待用户点击提交按钮
     }, 300);
   };
 
@@ -158,17 +157,14 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
     }
   };
 
-  const handleSubmit = async () => {
-    // 答案已经在handleOptionSelect中保存了
-    if (!selectedOption) {
-      message.warning('请选择一个选项后再提交');
-      return;
-    }
+  // 直接提交测试，用于最后一题自动提交
+  const submitTest = async () => {
+    if (isSubmitting) return; // 防止重复提交
 
     setIsSubmitting(true);
 
     try {
-      // 使用当前已保存的答案（最后一条已经包含在内）
+      // 使用当前已保存的答案
       const finalAnswers = [...answers];
       finalAnswers.sort((a, b) => a.questionId - b.questionId);
 
@@ -197,6 +193,29 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedOption) {
+      message.warning('请选择一个选项后再提交');
+      return;
+    }
+
+    // 手动提交时，先保存当前答案再提交
+    const newAnswer: UserAnswer = {
+      questionId: currentQuestion.id,
+      selectedOption: selectedOption
+    };
+
+    const updatedAnswers = answers.filter(a => a.questionId !== currentQuestion.id);
+    updatedAnswers.push(newAnswer);
+    updatedAnswers.sort((a, b) => a.questionId - b.questionId);
+    setAnswers(updatedAnswers);
+
+    // 延迟提交，让用户看到选择效果
+    setTimeout(() => {
+      submitTest();
+    }, 300);
   };
 
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
@@ -249,7 +268,7 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
             </NavigationButton>
           )}
 
-          {!isLastQuestion && (
+          {!isLastQuestion ? (
             <NavigationButton
               type="primary"
               size="large"
@@ -261,6 +280,20 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
               }}
             >
               下一题
+            </NavigationButton>
+          ) : (
+            <NavigationButton
+              type="primary"
+              size="large"
+              onClick={handleSubmit}
+              disabled={!selectedOption}
+              loading={isSubmitting}
+              style={{
+                background: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
+                border: 'none'
+              }}
+            >
+              提交测评
             </NavigationButton>
           )}
         </ButtonContainer>

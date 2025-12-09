@@ -133,6 +133,29 @@ export interface MeetingGuide {
   };
 }
 
+// 相处指南
+export interface RelationshipGuide {
+  communicationStyle: {
+    preferred: string[];
+    avoid: string[];
+    tips: string[];
+  };
+  conflictResolution: {
+    commonTriggers: string[];
+    solutions: string[];
+    prevention: string[];
+  };
+  emotionalNeeds: {
+    userNeeds: string[];
+    partnerNeeds: string[];
+    balance: string[];
+  };
+  growthAreas: {
+    together: string[];
+    individual: string[];
+  };
+}
+
 // 测评结果
 export interface TestResult {
   userId?: string;
@@ -149,6 +172,7 @@ export interface TestResult {
   compatibilityAnalysis: CompatibilityAnalysis;
   personalGrowth: PersonalGrowthGuide;
   meetingGuide: MeetingGuide;
+  relationshipGuide: RelationshipGuide;
   mainType: PartnerType;
   avoidType: PartnerType;
   compatibilityRanking: Array<{
