@@ -1,4 +1,4 @@
-import { Dimensions, TestResult, EmotionalType, IdealPartnerProfile, CompatibilityAnalysis, PersonalGrowthGuide, MeetingGuide } from '../types';
+import { Dimensions, EmotionalType, IdealPartnerProfile, CompatibilityAnalysis, PersonalGrowthGuide, MeetingGuide } from '../types';
 
 // 情感类型定义库
 const emotionalTypes: Record<string, Omit<EmotionalType, 'id'> & { id?: string }> = {
@@ -150,9 +150,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '爱情是细水长流的陪伴，是用行动兑现的承诺'
       },
       loveLanguage: {
-        expression: '通过实际行动、承担责任、提供稳定支持',
-        appreciation: '当你说"谢谢你的付出"时，会觉得一切都值得',
-        values: ['承诺', '稳定', '责任', '行动']
+        expression: '通过默默的行动和坚定的承诺来表达爱意，比如准时接送、记得重要日子、为你解决实际问题',
+        appreciation: '当你对TA说"有你在我很安心"或表达对TA可靠性的认可时，TA会觉得自己的付出被看见了',
+        values: ['承诺', '稳定', '责任', '守护']
       },
       lifestyleScenes: {
         dailyLife: '规律的作息，会记得重要的日子，默默为你准备早餐',
@@ -179,9 +179,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '最好的爱情是一起成长，互相成就，成为更好的自己'
       },
       loveLanguage: {
-        expression: '支持你的梦想，分享资源，共同制定目标',
-        appreciation: '认可你们的共同成就，庆祝彼此的进步',
-        values: ['成长', '目标', '伙伴关系', '未来']
+        expression: '通过鼓励你追求梦想、分享成功经验、共同规划未来来表达爱意，会为你的成就感到骄傲',
+        appreciation: '当你和TA分享职业成就或谈到未来规划时，TA会觉得你们是真正的人生合伙人',
+        values: ['成长', '抱负', '伙伴关系', '未来']
       },
       lifestyleScenes: {
         dailyLife: '快节奏但有序，会和你讨论工作计划，一起学习提升',
@@ -208,9 +208,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '爱就是细心的照料和无私的付出，让你感受到家的温暖'
       },
       loveLanguage: {
-        expression: '精心照顾你的生活，记住你的喜好，为你准备惊喜',
-        appreciation: '你的满足和开心是最大的回报',
-        values: ['关怀', '细节', '照顾', '温暖']
+        expression: '通过无微不至的照顾来表达爱意，比如为你准备爱吃的食物、在你累时给按摩、记得你的小喜好',
+        appreciation: '当你表达对TA照顾的感激或说"有你真好"时，TA会觉得所有的付出都很值得',
+        values: ['关怀', '温柔', '陪伴', '滋养']
       },
       lifestyleScenes: {
         dailyLife: '会为你准备爱心便当，提醒你添衣，记得你的喜好',
@@ -237,9 +237,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '灵魂的共鸣胜过一切，好的关系是两个独立灵魂的相互照亮'
       },
       loveLanguage: {
-        expression: '深度对话，分享思想，精神支持和理解',
-        appreciation: '当你说"我理解你"时，感觉被真正看见',
-        values: ['理解', '共鸣', '独立', '深度']
+        expression: '通过深度的精神交流和思想碰撞来表达爱意，比如深夜长谈、分享读书心得、探讨人生哲学',
+        appreciation: '当你对TA说"你让我看到了不同的世界"或表达思想共鸣时，TA会觉得找到了知音',
+        values: ['思想', '共鸣', '深度', '理解']
       },
       lifestyleScenes: {
         dailyLife: '喜欢安静的时光，会和你分享读书心得，讨论有趣的话题',
@@ -266,9 +266,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '好的关系是两个完整的人选择在一起，而不是彼此需要'
       },
       loveLanguage: {
-        expression: '尊重你的空间，支持你的独立，不过度干涉',
-        appreciation: '当你理解和尊重他们的独立性时',
-        values: ['自由', '独立', '边界', '轻松']
+        expression: '通过给予足够的个人空间和尊重来表达爱意，支持你的独立发展，不会过度干涉你的决定',
+        appreciation: '当你主动分享自己的生活和成就，而不是过度依赖时，TA会觉得你们的关系很健康',
+        values: ['自由', '尊重', '空间', '独立']
       },
       lifestyleScenes: {
         dailyLife: '各自有自己的生活，但会安排高质量的相处时间',
@@ -295,9 +295,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '爱情是理性的选择和责任的承担，是两个人共同面对生活的智慧'
       },
       loveLanguage: {
-        expression: '通过解决问题和提供实际支持来表达关心',
-        appreciation: '当你认可他们的理性分析和解决方案时',
-        values: ['理性', '效率', '解决', '支持']
+        expression: '通过帮你分析问题、制定解决方案、提高效率来表达关心，会给你清晰的逻辑分析和实用建议',
+        appreciation: '当你采纳TA的建议并取得好结果，或者认可TA的理性思维时，TA会觉得自己的价值被体现了',
+        values: ['逻辑', '效率', '理性', '实用']
       },
       lifestyleScenes: {
         dailyLife: '生活有序，注重计划和效率，会为你解决实际问题',
@@ -324,9 +324,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '爱情是责任和承诺的体现，是用行动创造的美好生活'
       },
       loveLanguage: {
-        expression: '通过负责任的态度和实际的行动来表达爱意',
-        appreciation: '当你感谢他们的可靠和担当时',
-        values: ['责任', '承诺', '实际', '稳定']
+        expression: '通过履行承诺和承担责任来表达爱意，比如说到做到、为未来做实际规划、在困难时不离不弃',
+        appreciation: '当你对TA说"你让我觉得生活很踏实"或表达对TA责任心的赞赏时，TA会觉得很安心',
+        values: ['责任', '承诺', '靠谱', '踏实']
       },
       lifestyleScenes: {
         dailyLife: '生活规律有序，会为未来做详细规划并执行',
@@ -353,9 +353,9 @@ export function generateIdealPartnerProfile(mainType: any, userDimensions: Dimen
         lovePhilosophy: '爱情是灵魂的共鸣，是情感的深度连接，是生命最美的体验'
       },
       loveLanguage: {
-        expression: '通过深度的情感交流和浪漫的表达来传递爱意',
-        appreciation: '当你回应他们的情感表达并产生共鸣时',
-        values: ['情感', '浪漫', '表达', '共鸣']
+        expression: '通过丰富的情感表达和浪漫行动来传递爱意，比如深情对视、惊喜约会、写情书、制造浪漫氛围',
+        appreciation: '当你对TA的情感表达做出热烈回应，或者和TA一起享受浪漫时光时，TA会觉得深深被爱',
+        values: ['情感', '浪漫', '表达', '心动']
       },
       lifestyleScenes: {
         dailyLife: '生活充满情感色彩，会创造各种浪漫的时刻',
