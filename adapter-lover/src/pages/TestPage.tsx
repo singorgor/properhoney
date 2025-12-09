@@ -107,6 +107,29 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
 
   const handleOptionSelect = (optionId: string) => {
     setSelectedOption(optionId);
+
+    // 自动保存答案
+    const newAnswer: UserAnswer = {
+      questionId: currentQuestion.id,
+      selectedOption: optionId
+    };
+
+    const updatedAnswers = answers.filter(a => a.questionId !== currentQuestion.id);
+    updatedAnswers.push(newAnswer);
+    updatedAnswers.sort((a, b) => a.questionId - b.questionId);
+    setAnswers(updatedAnswers);
+
+    // 延迟一下再跳转或提交，让用户看到选择效果
+    setTimeout(() => {
+      if (currentQuestionIndex < questions.length - 1) {
+        // 不是最后一题，跳转到下一题
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setSelectedOption('');
+      } else {
+        // 是最后一题，自动提交
+        handleSubmit();
+      }
+    }, 300);
   };
 
   const handlePrevious = () => {
@@ -121,24 +144,18 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
       return;
     }
 
-    // 保存当前答案
-    const newAnswer: UserAnswer = {
-      questionId: currentQuestion.id,
-      selectedOption
-    };
-
-    const updatedAnswers = answers.filter(a => a.questionId !== currentQuestion.id);
-    updatedAnswers.push(newAnswer);
-    updatedAnswers.sort((a, b) => a.questionId - b.questionId);
-    setAnswers(updatedAnswers);
-
-    if (currentQuestionIndex < questions.length - 1) {
+    // 如果是最后一题，直接提交
+    if (currentQuestionIndex === questions.length - 1) {
+      handleSubmit();
+    } else {
+      // 否则跳转到下一题
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption('');
     }
   };
 
   const handleSubmit = async () => {
+    // 答案已经在handleOptionSelect中保存了
     if (!selectedOption) {
       message.warning('请选择一个选项后再提交');
       return;
@@ -147,14 +164,8 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
     setIsSubmitting(true);
 
     try {
-      // 保存最后答案
-      const newAnswer: UserAnswer = {
-        questionId: currentQuestion.id,
-        selectedOption
-      };
-
-      const finalAnswers = answers.filter(a => a.questionId !== currentQuestion.id);
-      finalAnswers.push(newAnswer);
+      // 使用当前已保存的答案（最后一条已经包含在内）
+      const finalAnswers = [...answers];
       finalAnswers.sort((a, b) => a.questionId - b.questionId);
 
       // 计算结果
