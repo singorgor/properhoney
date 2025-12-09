@@ -131,6 +131,13 @@ export interface MeetingGuide {
     createOpportunities: string;
     deepConnection: string;
   };
+  iceBreakers: string[];
+  onlineStrategies: {
+    profileTips: string;
+    bioExamples: string;
+    redFlags: string;
+  };
+  seasonalOpportunities: string[];
 }
 
 // 相处指南

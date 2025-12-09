@@ -19,12 +19,8 @@ import {
   UserOutlined,
   ThunderboltOutlined,
   GiftOutlined,
-  BookOutlined,
-  TeamOutlined,
-  FireOutlined,
   AlertOutlined,
   CheckCircleOutlined,
-  EyeOutlined,
   MessageOutlined,
   RocketOutlined
 } from '@ant-design/icons';
@@ -997,78 +993,6 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
                   </Row>
                 </Card>
               ))}
-            </SectionCard>
-          </TabPane>
-
-          <TabPane tab={
-            <span>
-              <TeamOutlined />
-              遇见TA
-            </span>
-          } key="5">
-            <SectionCard>
-              <Title level={3}>最佳相遇场所</Title>
-              <Row gutter={[15, 15]}>
-                {result.meetingGuide.bestPlaces.map((place, index) => (
-                  <Col xs={24} sm={12} md={8} key={index}>
-                    <Card size="small" style={{ textAlign: 'center', backgroundColor: '#f0f5ff' }}>
-                      <TeamOutlined style={{ fontSize: 24, color: '#1890ff', marginBottom: 10 }} />
-                      <div>{place}</div>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </SectionCard>
-
-            <Row gutter={[30, 30]}>
-              <Col xs={24} md={12}>
-                <SectionCard title="✨ 积极信号">
-                  <TipList>
-                    {result.meetingGuide.recognitionSignals.positive.map((signal, index) => (
-                      <li key={index}>
-                        <CheckCircleOutlined />
-                        {signal}
-                      </li>
-                    ))}
-                  </TipList>
-                </SectionCard>
-              </Col>
-              <Col xs={24} md={12}>
-                <SectionCard title="⚠️ 需要警惕">
-                  <TipList>
-                    {result.meetingGuide.recognitionSignals.warning.map((warning, index) => (
-                      <li key={index}>
-                        <AlertOutlined style={{ color: '#ff4d4f' }} />
-                        {warning}
-                      </li>
-                    ))}
-                  </TipList>
-                </SectionCard>
-              </Col>
-            </Row>
-
-            <SectionCard>
-              <Title level={3}>吸引TA的策略</Title>
-              <Row gutter={[20, 20]}>
-                <Col xs={24} md={8}>
-                  <HighlightBox>
-                    <Text strong>自然展示</Text>
-                    <Paragraph>{result.meetingGuide.attractionStrategies.naturalDisplay}</Paragraph>
-                  </HighlightBox>
-                </Col>
-                <Col xs={24} md={8}>
-                  <HighlightBox>
-                    <Text strong>创造机会</Text>
-                    <Paragraph>{result.meetingGuide.attractionStrategies.createOpportunities}</Paragraph>
-                  </HighlightBox>
-                </Col>
-                <Col xs={24} md={8}>
-                  <HighlightBox>
-                    <Text strong>深度连接</Text>
-                    <Paragraph>{result.meetingGuide.attractionStrategies.deepConnection}</Paragraph>
-                  </HighlightBox>
-                </Col>
-              </Row>
             </SectionCard>
           </TabPane>
         </Tabs>
