@@ -1003,10 +1003,6 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
             <ThunderboltOutlined />
             重新测评
           </ActionButton>
-          <ActionButton size="large" onClick={() => window.print()}>
-            <BookOutlined />
-            保存报告
-          </ActionButton>
         </div>
       </ResultCard>
     </ResultContainer>

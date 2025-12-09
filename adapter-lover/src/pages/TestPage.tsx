@@ -93,7 +93,9 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  // 根据实际已答题数计算进度，而不是题目索引
+  const answeredCount = answers.filter(a => a.selectedOption).length;
+  const progress = (answeredCount / questions.length) * 100;
 
   useEffect(() => {
     // 如果有之前的答案，恢复当前题目的选择
@@ -106,6 +108,8 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
   }, [currentQuestionIndex, answers, currentQuestion.id]);
 
   const handleOptionSelect = (optionId: string) => {
+    if (selectedOption === optionId) return; // 防止重复选择同一个选项
+
     setSelectedOption(optionId);
 
     // 自动保存答案
@@ -211,7 +215,7 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
                 '0%': '#667eea',
                 '100%': '#764ba2',
               }}
-              format={() => `${currentQuestionIndex + 1}/${questions.length}`}
+              format={() => `${answeredCount}/${questions.length}`}
             />
           </ProgressContainer>
           <QuestionTitle level={3}>
@@ -245,24 +249,12 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
             </NavigationButton>
           )}
 
-          {isLastQuestion ? (
-            <NavigationButton
-              type="primary"
-              size="large"
-              onClick={handleSubmit}
-              loading={isSubmitting}
-              style={{
-                background: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
-                border: 'none'
-              }}
-            >
-              提交测评
-            </NavigationButton>
-          ) : (
+          {!isLastQuestion && (
             <NavigationButton
               type="primary"
               size="large"
               onClick={handleNext}
+              disabled={!selectedOption}
               style={{
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 border: 'none'
