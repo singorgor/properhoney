@@ -128,7 +128,7 @@ const HomePage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
               <InfoCard>
                 <div className="anticon">🎯</div>
                 <h3>科学测评</h3>
-                <p>基于心理学五大维度，46道专业题目深度解析你的情感需求</p>
+                <p>基于心理学五大维度，40道专业题目深度解析你的情感需求</p>
               </InfoCard>
             </Col>
             <Col xs={24} sm={12} md={6}>
@@ -159,8 +159,8 @@ const HomePage: React.FC<{ onStart: () => void }> = ({ onStart }) => {
               测评信息
             </Title>
             <Space size="large">
-              <span><strong>题目数量：</strong>46题</span>
-              <span><strong>预计时间：</strong>10-15分钟</span>
+              <span><strong>题目数量：</strong>40题</span>
+              <span><strong>预计时间：</strong>8-12分钟</span>
               <span><strong>结果类型：</strong>深度分析报告</span>
             </Space>
           </div>

@@ -27,10 +27,11 @@ export function calculateDimensions(answers: UserAnswer[], questions: Question[]
 export function normalizeScores(scores: Dimensions): Dimensions {
   const normalized: Dimensions = { S: 0, A: 0, G: 0, R: 0, E: 0 };
 
-  // 根据题目数量和权重进行线性映射
-  // 假设原始分数范围大约在 -10 到 +20 之间
-  const minScore = -10;
-  const maxScore = 30;
+  // 40道题，每道题单个维度最高3分
+  // 每个维度大约8道题，最高约24分
+  // 调整映射范围使其更合理
+  const minScore = 0;
+  const maxScore = 24;
 
   Object.keys(scores).forEach(key => {
     const dimensionKey = key as keyof Dimensions;

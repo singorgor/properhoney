@@ -1,6 +1,6 @@
 import { Question } from '../types';
 
-// 46道测评题目
+// 40道测评题目
 export const questions: Question[] = [
   // S维度题目
   {
@@ -452,71 +452,4 @@ export const questions: Question[] = [
     ]
   },
 
-  // 反向计分题
-  {
-    id: 41,
-    category: 'S',
-    text: '以下哪种说法最符合你的真实想法？',
-    options: [
-      { id: 'A', text: '我很少因为伴侣没有及时回复而感到不安。', scores: { S: -2 } },
-      { id: 'B', text: '我觉得独立的感情比依赖的关系更健康。', scores: { S: -1, A: 1 } },
-      { id: 'C', text: '我不会过分关注伴侣的情绪变化。', scores: { S: -1 } },
-      { id: 'D', text: '我认为过度在意对方的感受反而会伤害关系。', scores: { S: -2, E: -1 } }
-    ]
-  },
-  {
-    id: 42,
-    category: 'A',
-    text: '对于"个人时间"这个概念，你更认同？',
-    options: [
-      { id: 'A', text: '我希望伴侣能随时参与我的生活安排。', scores: { A: -2, S: 1 } },
-      { id: 'B', text: '我觉得情侣之间不应该有太多私人空间。', scores: { A: -1 } },
-      { id: 'C', text: '分享一切才是亲密关系的体现。', scores: { A: -2 } },
-      { id: 'D', text: '我喜欢两个人时刻保持连接的状态。', scores: { A: -1 } }
-    ]
-  },
-  {
-    id: 43,
-    category: 'G',
-    text: '关于伴侣的"上进心"，你的真实看法是？',
-    options: [
-      { id: 'A', text: '我认为过度追求成长会让人变得焦虑。', scores: { G: -1, E: 1 } },
-      { id: 'B', text: '平静的生活比奋斗更重要。', scores: { G: -2, R: 1 } },
-      { id: 'C', text: '不是所有人都需要在事业上拼命。', scores: { G: -1 } },
-      { id: 'D', text: '我更看重当下的生活质量，而非未来的成就。', scores: { G: -2 } }
-    ]
-  },
-  {
-    id: 44,
-    category: 'R',
-    text: '在选择伴侣时，你认为哪个因素最不重要？',
-    options: [
-      { id: 'A', text: '对方的经济基础和物质条件。', scores: { R: -2 } },
-      { id: 'B', text: '在重大决策中的理性分析能力。', scores: { R: -1 } },
-      { id: 'C', text: '对未来生活的详细规划。', scores: { R: -1 } },
-      { id: 'D', text: '处理实际问题的执行力。', scores: { R: -2, G: -1 } }
-    ]
-  },
-  {
-    id: 45,
-    category: 'E',
-    text: '关于情感表达，你更倾向于哪种方式？',
-    options: [
-      { id: 'A', text: '我觉得过多的情绪交流会消耗关系能量。', scores: { E: -2, R: 1 } },
-      { id: 'B', text: '理性沟通比情感共鸣更重要。', scores: { E: -1 } },
-      { id: 'C', text: '我不太习惯分享内心感受。', scores: { E: -1, A: 1 } },
-      { id: 'D', text: '过度的共情反而会让关系变得复杂。', scores: { E: -2 } }
-    ]
-  },
-  {
-    id: 46,
-    category: 'mixed',
-    text: '以下哪种关系模式最让你感到不适？',
-    options: [
-      { id: 'A', text: '两个人时刻保持高度连接。', scores: { S: -1, A: -1 } },
-      { id: 'B', text: '需要不断确认彼此感情的状态。', scores: { S: -2, E: -1 } },
-      { id: 'C', text: '对未来有过多的规划和期待。', scores: { G: -1, R: -1 } },
-      { id: 'D', text: '频繁深入的情感交流。', scores: { E: -2 } }
-    ]
-  }
-];
+  ];
