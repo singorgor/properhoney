@@ -1,0 +1,9 @@
+{
+  "name": "adapter-lover-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd adapter-lover && npm run build",
+    "start": "cd adapter-lover && npm start"
+  }
+}
