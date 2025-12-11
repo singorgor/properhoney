@@ -878,9 +878,7 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
     return generateUserDescription();
   };
 
-  // 生成详细的性格特征描述
-  const generateDetailedTraits = (result: TestResult) => {
-    const { mainType } = result;
+        const { mainType } = result;
 
     const traitsLibrary = {
       'stable-harbor': [
@@ -950,76 +948,6 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
     ));
   };
 
-  // 生成增强的核心特质描述
-  const generateEnhancedCoreTraits = (result: TestResult) => {
-    const { mainType } = result;
-
-    const enhancedDescriptions = {
-      'stable-harbor': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>安稳的港湾</strong>就像一座温暖的灯塔，总能在你迷茫时指引方向。TA的情绪稳定如深海，不会因为生活的波澜而轻易动摇，反而能在你焦虑时给予最平静的力量。</p>
-          <p>TA的可靠性体现在点点滴滴：记得你说过的每件小事，在你需要时第一时间出现，用行动而非空话来表达爱意。和TA在一起，你会感受到前所未有的安全感，仿佛找到了心灵的归宿。</p>
-          <p>最珍贵的是TA那份难得的包容心，能够理解和接纳你的所有不完美。在TA面前，你可以卸下所有防备，做最真实的自己，因为TA知道爱一个人就是爱TA的全部，包括那些脆弱和缺点。</p>
-        </div>
-      `,
-      'free-spirit': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>自由的灵魂</strong>就像一阵清风，总能为你带来新鲜的生命气息。TA眼中闪烁着对世界的好奇，总能在平凡的日子里发现不平凡的乐趣，让每一天都充满惊喜。</p>
-          <p>TA的创意无限，看待问题的角度独特而有趣。当你陷入思维困境时，TA总能从一个意想不到的角度给你启发，让你看到世界的更多可能性。和TA在一起，生活永远不会枯燥。</p>
-          <p>最吸引人的是TA那份不羁的灵魂，敢于打破常规，追求内心真正的渴望。TA会鼓励你突破舒适区，尝试那些你一直想做却不敢做的事情，让你的人生更加丰富多彩。</p>
-        </div>
-      `,
-      'gentle-companion': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>温柔的陪伴者</strong>就像春日的细雨，润物细无声地滋养着你的心灵。TA的温柔不是软弱，而是一种强大的力量，能够化解你内心的焦虑和不安。</p>
-          <p>TA有着敏锐的洞察力，能够察觉到你最细微的情绪变化。在你还未开口时，TA就已经感受到了你的需要，给予恰到好处的关怀。这种被深深理解的感觉，是世界上最珍贵的礼物。</p>
-          <p>TA的陪伴如同一首温暖的歌曲，不需要华丽的言辞，却能在每个平凡的日子里给予你力量。和TA在一起，你会明白什么是真正的爱——不是轰轰烈烈，而是细水长流的相守。</p>
-        </div>
-      `,
-      'wise-mentor': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>智慧的导师</strong>就像一座丰富的图书馆，总能为你提供宝贵的人生经验和深刻的见解。TA的思维清晰而有逻辑，能够帮你理清复杂的思路，找到问题的本质。</p>
-          <p>TA的智慧不仅来自书本，更来自对生活的深刻体验。当你迷茫时，TA会耐心倾听，然后用温和而坚定的语气给你指点，但从不替你做决定，因为TA相信每个人都有自己的路要走。</p>
-          <p>最珍贵的是TA对成长的执着追求，不仅要求自己不断进步，也会鼓励你成为更好的自己。和TA在一起，你会发现自己的潜力被不断激发，人生视野也在不断扩展。</p>
-        </div>
-      `,
-      'passionate-soul': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>热情的灵魂</strong>就像一团燃烧的火焰，总能点燃你内心的激情。TA的情感丰富而深刻，对生活有着强烈的体验，每一次开心、每一次感动都是那么真实而强烈。</p>
-          <p>TA敢于表达内心最真实的感受，不会隐藏自己的喜怒哀乐。这种坦诚让你能够清楚地了解TA的内心世界，也鼓励你更加真实地面对自己的情感。</p>
-          <p>和TA在一起，生活充满了色彩和温度。TA会教会你如何全身心地投入到每一次体验中，无论是看一场电影还是一次旅行，都能感受到前所未有的丰富和深刻。</p>
-        </div>
-      `,
-      'balanced-builder': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>平衡的建造者</strong>就像一位出色的建筑师，既能仰望星空，又能脚踏实地。TA在理性和感性之间找到了完美的平衡，懂得在追求梦想的同时也不忘现实的考量。</p>
-          <p>TA的规划能力很强，对未来有清晰的蓝图，但不会因此而变得僵化。TA知道生活充满了变化，所以总能在坚持目标和灵活调整之间找到最佳平衡点。</p>
-          <p>最令人欣赏的是TA那份成熟的情商，既能够理性地分析问题，也能温柔地处理情感。在关系中，TA追求的是双方的共同成长，让彼此都能在这段感情中获得满足和进步。</p>
-        </div>
-      `,
-      'romantic-dreamer': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>浪漫的梦想家</strong>就像一位诗人，总能在平凡的生活中发现诗意和美好。TA的想象力丰富，能够为你们的关系创造出无数浪漫而温暖的瞬间。</p>
-          <p>TA对爱情有着美好的憧憬，相信真爱的存在，并愿意为之付出努力。和TA在一起，你会重新相信童话，因为TA会让你的生活充满仪式感和惊喜。</p>
-          <p>最珍贵的是TA那份细腻的情感，能够捕捉到生活中那些细微的美好。一片落叶、一道彩虹、一句温柔的话语，都能成为TA心中的珍藏，并与你分享这份感动。</p>
-        </div>
-      `,
-      'adventurous-explorer': `
-        <div style={{ lineHeight: '1.8' }}>
-          <p>这位<strong>勇敢的探索者</strong>就像一位冒险家，总在寻找新的挑战和体验。TA对世界保持着孩童般的好奇心，永远不会停止探索的脚步。</p>
-          <p>TA的勇气不仅体现在外部冒险上，更体现在面对内心恐惧时的勇敢。TA会鼓励你直面自己的弱点，突破自我设限，发现一个更强大的自己。</p>
-          <p>和TA在一起，生活充满了刺激和新鲜感。无论是尝试新的美食、学习新的技能，还是踏上未知的旅程，每一天都是一次新的冒险。TA会告诉你，人生最精彩的部分，往往在舒适区之外。</p>
-        </div>
-      `
-    };
-
-    return (
-      <div dangerouslySetInnerHTML={{
-        __html: enhancedDescriptions[mainType.id as keyof typeof enhancedDescriptions] || enhancedDescriptions['stable-harbor']
-      }} />
-    );
-  };
-
   // 生成性格互补分析
   const generateCompatibilityAnalysis = (result: TestResult) => {
     const { dimensions, mainType } = result;
@@ -1029,43 +957,43 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
 
     // 分析各个维度的互补性
     if (Math.abs(dimensions.S - idealProfile.S) <= 20) {
-      complementaryPairs.push('你们在情感安全感上高度契合，都能给予对方所需的稳定感');
+      complementaryPairs.push('你们在情感安全感上高度契合，都能给予对方所需的稳定感。');
     } else if (dimensions.S > idealProfile.S + 20) {
-      complementaryPairs.push('你的安全感需求比TA更强，TA的稳定性能很好地满足你的渴望');
+      complementaryPairs.push('你的安全感需求比TA更强，TA的稳定性能很好地满足你的渴望。');
     } else {
-      complementaryPairs.push('你的独立性能给TA提供成长空间，而TA的稳重能给你适当的依靠');
+      complementaryPairs.push('你的独立性能给TA提供成长空间，而TA的稳重能给你适当的依靠。');
     }
 
     if (Math.abs(dimensions.A - idealProfile.A) <= 20) {
-      complementaryPairs.push('在个人空间方面很协调，都懂得尊重彼此的独立性');
+      complementaryPairs.push('在个人空间方面很协调，都懂得尊重彼此的独立性。');
     } else if (dimensions.A > idealProfile.A + 20) {
-      complementaryPairs.push('你对个人空间的需求比TA更大，这种差异反而让关系更有呼吸感');
+      complementaryPairs.push('你对个人空间的需求比TA更大，这种差异反而让关系更有呼吸感。');
     } else {
-      complementaryPairs.push('TA对空间的珍视能够让你感受到被尊重，而你的依恋能让TA感受到被需要');
+      complementaryPairs.push('TA对空间的珍视能够让你感受到被尊重，而你的依恋能让TA感受到被需要。');
     }
 
     if (Math.abs(dimensions.G - idealProfile.G) <= 20) {
-      complementaryPairs.push('你们对成长的态度很一致，都能在关系中实现自我提升');
+      complementaryPairs.push('你们对成长的态度很一致，都能在关系中实现自我提升。');
     } else if (dimensions.G > idealProfile.G + 20) {
-      complementaryPairs.push('你对成长的渴望能带动TA一起进步，让关系更有活力');
+      complementaryPairs.push('你对成长的渴望能带动TA一起进步，让关系更有活力。');
     } else {
-      complementaryPairs.push('TA的务实能平衡你的理想主义，让梦想更接地气');
+      complementaryPairs.push('TA的务实能平衡你的理想主义，让梦想更接地气。');
     }
 
     if (Math.abs(dimensions.R - idealProfile.R) <= 20) {
-      complementaryPairs.push('在现实考量上很合拍，都能理性对待生活和感情');
+      complementaryPairs.push('在现实考量上很合拍，都能理性对待生活和感情。');
     } else if (dimensions.R > idealProfile.R + 20) {
-      complementaryPairs.push('你的务实能帮助TA更加脚踏实地，避免过于理想化');
+      complementaryPairs.push('你的务实能帮助TA更加脚踏实地，避免过于理想化。');
     } else {
-      complementaryPairs.push('TA的浪漫能给你的生活增添色彩，让你保持对美好的向往');
+      complementaryPairs.push('TA的浪漫能给你的生活增添色彩，让你保持对美好的向往。');
     }
 
     if (Math.abs(dimensions.E - idealProfile.E) <= 20) {
-      complementaryPairs.push('情感表达方式很匹配，能够轻松理解彼此的感受');
+      complementaryPairs.push('情感表达方式很匹配，能够轻松理解彼此的感受。');
     } else if (dimensions.E > idealProfile.E + 20) {
-      complementaryPairs.push('你的情感丰富能够帮助TA更好地表达内心，让沟通更顺畅');
+      complementaryPairs.push('你的情感丰富能够帮助TA更好地表达内心，让沟通更顺畅。');
     } else {
-      complementaryPairs.push('TA的理性能够平衡你的情绪化，在争吵时起到降温作用');
+      complementaryPairs.push('TA的理性能够平衡你的情绪化，在争吵时起到降温作用。');
     }
 
     return complementaryPairs.join('，') + '。这样的组合让你们在相互理解的基础上，都能成为更好的自己。';
@@ -1079,27 +1007,27 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
     const challenges = [];
 
     if (Math.abs(dimensions.S - idealProfile.S) > 30) {
-      challenges.push('在安全感需求上存在差异，需要多沟通彼此的期待');
+      challenges.push('在安全感需求上存在差异，需要多沟通彼此的期待。');
     }
 
     if (Math.abs(dimensions.A - idealProfile.A) > 30) {
-      challenges.push('对个人空间的需求不同，需要找到彼此都舒服的平衡点');
+      challenges.push('对个人空间的需求不同，需要找到彼此都舒服的平衡点。');
     }
 
     if (Math.abs(dimensions.G - idealProfile.G) > 30) {
-      challenges.push('在成长节奏上可能不一致，需要协调彼此的发展速度');
+      challenges.push('在成长节奏上可能不一致，需要协调彼此的发展速度。');
     }
 
     if (Math.abs(dimensions.R - idealProfile.R) > 30) {
-      challenges.push('在理想与现实的平衡上需要更多理解和包容');
+      challenges.push('在理想与现实的平衡上需要更多理解和包容。');
     }
 
     if (Math.abs(dimensions.E - idealProfile.E) > 30) {
-      challenges.push('情感表达方式有差异，需要学习对方的情感语言');
+      challenges.push('情感表达方式有差异，需要学习对方的情感语言。');
     }
 
     if (challenges.length === 0) {
-      challenges.push('你们的性格很匹配，主要挑战来自于外部环境而非彼此');
+      challenges.push('你们的性格很匹配，主要挑战来自于外部环境而非彼此。');
     }
 
     return challenges.join('，') + '。记住，差异不是问题，学会理解和包容才是关系长久的关键。';
@@ -1161,9 +1089,9 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
               <Row gutter={[30, 30]}>
                 <Col xs={24} md={24}>
                   <Title level={3}>TA的核心特质</Title>
-                  <div style={{ fontSize: '1.1rem', lineHeight: '1.8' }}>
-                    {generateEnhancedCoreTraits(result)}
-                  </div>
+                  <Paragraph style={{ fontSize: '1.1rem' }}>
+                    {result.idealPartner.personality.uniqueCharm}
+                  </Paragraph>
                     <div style={{ marginTop: '20px' }}>
                     <Paragraph style={{ fontSize: '1rem', color: '#666' }}>
                       <strong>爱情观：</strong>{result.idealPartner.personality.lovePhilosophy}
