@@ -124,7 +124,8 @@ const ChartContainer = styled.div`
 const RadarContainer = styled.div`
   position: relative;
   min-height: 800px;
-  margin: 40px 0;
+  margin: 60px 0 40px 0;
+  padding-top: 80px;
 
   .radar-center {
     position: absolute;
@@ -139,16 +140,16 @@ const RadarContainer = styled.div`
     width: 300px;
     z-index: 2;
 
-    // 情感安全感 - 顶部
+    // 情感安全感 - 顶部，调整位置避免遮挡
     &.dimension-s {
-      top: 0;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     // 个人空间 - 右上
     &.dimension-a {
-      top: 10%;
+      top: 15%;
       right: 5%;
       transform: translateY(0);
     }
@@ -169,7 +170,7 @@ const RadarContainer = styled.div`
 
     // 情绪表达 - 左上
     &.dimension-e {
-      top: 10%;
+      top: 15%;
       left: 5%;
       transform: translateY(0);
     }
@@ -178,16 +179,17 @@ const RadarContainer = styled.div`
   // 响应式设计
   @media (max-width: 1200px) {
     min-height: 900px;
+    padding-top: 100px;
 
     .dimension-card {
       width: 280px;
 
       &.dimension-s {
-        top: -20px;
+        top: 0px;
       }
 
       &.dimension-a {
-        top: 5%;
+        top: 10%;
         right: 2%;
       }
 
@@ -202,7 +204,7 @@ const RadarContainer = styled.div`
       }
 
       &.dimension-e {
-        top: 5%;
+        top: 10%;
         left: 2%;
       }
     }
@@ -211,6 +213,7 @@ const RadarContainer = styled.div`
   @media (max-width: 768px) {
     min-height: auto;
     position: static;
+    padding-top: 0;
 
     .radar-center {
       position: static;
@@ -944,7 +947,7 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
           <TabPane tab={
             <span>
               <HeartOutlined />
-              理想伴侣详情
+              理想伴侣
             </span>
           } key="1">
             <SectionCard>
@@ -1065,11 +1068,10 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
           <TabPane tab={
             <span>
               <UserOutlined />
-              你的情感画像
+              你的画像
             </span>
           } key="2">
-            <Title level={4} style={{ marginBottom: 24, textAlign: 'center' }}>五维度解析</Title>
-
+            
             <RadarContainer>
               <div className="radar-center">
                 <ChartContainer>
