@@ -121,6 +121,123 @@ const ChartContainer = styled.div`
   padding: 20px;
 `;
 
+const RadarContainer = styled.div`
+  position: relative;
+  min-height: 800px;
+  margin: 40px 0;
+
+  .radar-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .dimension-card {
+    position: absolute;
+    width: 300px;
+    z-index: 2;
+
+    // 情感安全感 - 顶部
+    &.dimension-s {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    // 个人空间 - 右上
+    &.dimension-a {
+      top: 10%;
+      right: 5%;
+      transform: translateY(0);
+    }
+
+    // 共同成长 - 右下
+    &.dimension-g {
+      bottom: 10%;
+      right: 5%;
+      transform: translateY(0);
+    }
+
+    // 现实务实 - 左下
+    &.dimension-r {
+      bottom: 10%;
+      left: 5%;
+      transform: translateY(0);
+    }
+
+    // 情绪表达 - 左上
+    &.dimension-e {
+      top: 10%;
+      left: 5%;
+      transform: translateY(0);
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 1200px) {
+    min-height: 900px;
+
+    .dimension-card {
+      width: 280px;
+
+      &.dimension-s {
+        top: -20px;
+      }
+
+      &.dimension-a {
+        top: 5%;
+        right: 2%;
+      }
+
+      &.dimension-g {
+        bottom: 5%;
+        right: 2%;
+      }
+
+      &.dimension-r {
+        bottom: 5%;
+        left: 2%;
+      }
+
+      &.dimension-e {
+        top: 5%;
+        left: 2%;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    min-height: auto;
+    position: static;
+
+    .radar-center {
+      position: static;
+      transform: none;
+      margin-bottom: 30px;
+    }
+
+    .dimension-card {
+      position: static;
+      transform: none !important;
+      width: 100%;
+      margin-bottom: 20px;
+
+      &.dimension-s,
+      &.dimension-a,
+      &.dimension-g,
+      &.dimension-r,
+      &.dimension-e {
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+      }
+    }
+  }
+`;
+
 const ScoreDisplay = styled.div`
   text-align: center;
   margin: 20px 0;
@@ -172,38 +289,60 @@ const TraitTag = styled(Tag)`
   }
 `;
 
-const DimensionProgress = styled.div`
-  margin: 15px 0;
+const DimensionCard = styled.div`
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
 
-  .dimension-label {
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .dimension-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .dimension-name {
+    font-size: 16px;
+    color: #262626;
+    font-weight: 600;
+  }
+
+  .dimension-tag {
+    font-size: 12px;
     font-weight: 500;
+    border-radius: 20px;
+    padding: 4px 12px;
+    border: none;
   }
 
-  .dimension-description {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 8px;
-    line-height: 1.5;
+  .dimension-progress {
+    margin-bottom: 16px;
+
+    .ant-progress-bg {
+      border-radius: 10px;
+    }
+  }
+
+  .dimension-explanation {
+    color: #595959;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 12px 16px;
+    background: #fafafa;
+    border-radius: 8px;
+    border-left: 4px solid #1890ff;
   }
 `;
 
-const StageCard = styled(Card)`
-  margin: 20px 0;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
-  .ant-card-head {
-    background: linear-gradient(135deg, #f0f5ff 0%, #e6f7ff 100%);
-    border-radius: 12px 12px 0 0;
-  }
-
-  .ant-card-body {
-    padding: 20px;
-  }
-`;
 
 const TipList = styled.ul`
   list-style: none;
@@ -473,15 +612,47 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
     }
   };
 
-  const getDimensionName = (key: keyof typeof result.dimensions) => {
-    const names = {
-      'S': '情感安全感需求',
-      'A': '个人空间需求',
-      'G': '共同成长重视度',
-      'R': '现实务实程度',
-      'E': '情绪表达偏好'
+  
+  // 获取维度解释文案
+  const getDimensionExplanation = (key: keyof typeof result.dimensions, level: string) => {
+    const explanations: Record<string, Record<string, string>> = {
+      'S': {
+        '极高': '在爱情里，你渴望一份可以让你完全放松的安心感。就像冬日里温暖的拥抱，让你感受到被珍视和保护。你希望找到那个能与你分享内心最深处的脆弱，依然被温柔以待的人。',
+        '较高': '你希望在爱情中找到稳定的依靠，像是找到了人生的锚。这种对安全感的向往，让你在感情中格外认真，也让你成为一个值得托付的伴侣。',
+        '中等': '你在爱情中展现了难得的平衡智慧——既能享受甜蜜的依偎，也保持独立的风采。这样的你，懂得爱情里最好的状态是：我爱你，但我也爱我自己。',
+        '较低': '自由是你的翅膀，爱情是你的天空。你不需要时刻黏在一起来证明爱，因为你知道真正的感情是彼此信任、各自精彩。你希望的那个人，懂得欣赏你的独立之美。',
+        '很低': '你的心像风一样自由，不被任何形式的爱情所束缚。你希望的关系是轻松随性的，像是春天的风，温柔地拂过却不停留。你寻找的是一个能与你一起自由的灵魂。'
+      },
+      'A': {
+        '极高': '独处时光对你而言，像是为心灵充电的私密花园。你珍视与自己对话的宁静时刻，这让你在关系中更懂得自我。你期待的那个TA，会懂得给你足够的空间，让你做自己。',
+        '较高': '你像一首优雅的独奏曲，享受二人世界的合奏，也珍爱独处的悠扬。这种平衡让你在爱情中保持自我，也让你成为更有魅力的伴侣。',
+        '中等': '你在爱情中找到了最美的节奏——有时紧紧相拥，有时各自起舞。你明白，最好的爱情不是彼此凝视，而是一起望向同一个方向，同时保留各自的风景。',
+        '较低': '与你相爱，就像融入了一首温暖的二重奏。你享受与伴侣分享生活的点点滴滴，希望两个人的世界紧密相连，每一天都因为彼此的存在而更加完整。',
+        '很低': '爱情对你而言，是生命的主题曲。你渴望与心的人时刻相伴，分享每一个清晨和黄昏。你寻找的是一个愿意与你编织生活每一个细节的深情伴侣。'
+      },
+      'G': {
+        '极高': '你相信爱情不是终点，而是共同成长的起点。你期待那个能与你并肩前行的人，一起探索人生的可能性，在彼此眼中看到更好的自己。',
+        '较高': '在你心中，爱情应该让双方都成为更好的人。你希望找到那个能互相激励的伙伴，一起学习新知，追逐梦想，让生命因为这段关系而更加丰盛。',
+        '中等': '你对成长有着温柔的理解——不强求，不忽视，让一切自然发生。你相信最好的成长是在享受当下的同时，悄然发生的变化。',
+        '较低': '比起遥远的未来，你更在乎此刻的温柔。你希望爱情是简单的陪伴和当下的快乐，两个人在一起，就是最美的风景。',
+        '很低': '对你而言，爱情最美的模样就是纯粹的此刻。不需要规划未来，不需要追求成长，只要此刻心与心的相通，就已足够。'
+      },
+      'R': {
+        '极高': '你懂得爱情不仅需要诗意，也需要面包。这份务实让你在感情中格外可靠，你希望找到一个同样认真的伴侣，一起构建稳固美好的未来。',
+        '较高': '你能在浪漫与现实间找到巧妙的平衡。既相信爱情的魔力，也明白生活需要经营。这样的你，注定会遇到一个同样懂得生活真谛的人。',
+        '中等': '你的心中住着一位诗人和一位建筑师，既憧憬浪漫，也规划现实。你相信最好的爱情，既有心跳的感觉，也有生活的温度。',
+        '较低': '你相信爱情的魔力超越一切物质条件。在你眼中，两颗心的连接比任何外在因素都重要，你寻找的是一个同样重视情感深度的灵魂。',
+        '很低': '你是一个纯粹的浪漫主义者，完全跟随内心的声音。爱情对你而言，是灵魂的共鸣，不受任何现实的束缚。你等待的是一个同样敢于为爱奋不顾身的人。'
+      },
+      'E': {
+        '极高': '你的心像一本打开的诗集，每一页都写满了温柔的情感。你善于表达爱意，也希望找到那个愿意与你进行深度情感对话的人，一起谱写恋爱的美好篇章。',
+        '较高': '你不吝啬表达内心的情感，懂得用言语和行动传递爱意。这样的你，让爱情充满了温度，也期待遇到一个同样愿意分享内心的伴侣。',
+        '中等': '你在情感的表达上有着天然的智慧，既能说出甜言蜜语，也能进行理性的沟通。这样的平衡，让你在任何关系中都能游刃有余。',
+        '较低': '你的爱意像深藏的宝藏，不轻易示人，却格外珍贵。你习惯用行动表达关心，希望遇到一个懂得细读你心思的细心人。',
+        '很低': '你的情感世界如同一片宁静的湖泊，表面平静，深处却藏着丰富的情感。你希望遇到一个愿意慢慢了解你、读懂你内心风景的人。'
+      }
     };
-    return names[key];
+    return explanations[key]?.[level] || '';
   };
 
   // 格式化特质文本，分离标题和描述
@@ -744,33 +915,135 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
               你的情感画像
             </span>
           } key="2">
-            <Row gutter={[30, 30]}>
-              <Col xs={24} md={12}>
+            <Title level={4} style={{ marginBottom: 24, textAlign: 'center' }}>五维度解析</Title>
+
+            <RadarContainer>
+              <div className="radar-center">
                 <ChartContainer>
                   <Radar data={radarData} options={radarOptions} />
                 </ChartContainer>
-              </Col>
-              <Col xs={24} md={12}>
-                <Title level={4}>五维度解析</Title>
-                {Object.entries(result.dimensions).map(([key, value]) => (
-                  <DimensionProgress key={key}>
-                    <div className="dimension-label">
-                      <Text strong>{getDimensionName(key as keyof typeof result.dimensions)}</Text>
-                      <Tag color={getDimensionColor(result.dimensionLevels[key as keyof typeof result.dimensionLevels])}>
-                        {result.dimensionLevels[key as keyof typeof result.dimensionLevels]} ({value}分)
-                      </Tag>
-                    </div>
-                    <Progress
-                      percent={value}
-                      strokeColor={getDimensionColor(result.dimensionLevels[key as keyof typeof result.dimensionLevels])}
-                      showInfo={false}
-                      strokeWidth={10}
-                      style={{ marginBottom: 10 }}
-                    />
-                  </DimensionProgress>
-                ))}
-              </Col>
-            </Row>
+              </div>
+
+              <div className="dimension-card dimension-s">
+                <DimensionCard>
+                  <div className="dimension-header">
+                    <Text strong className="dimension-name">情感安全感</Text>
+                    <Tag
+                      className="dimension-tag"
+                      color={getDimensionColor(result.dimensionLevels.S)}
+                    >
+                      {result.dimensionLevels.S} ({result.dimensions.S}分)
+                    </Tag>
+                  </div>
+                  <Progress
+                    percent={result.dimensions.S}
+                    strokeColor={getDimensionColor(result.dimensionLevels.S)}
+                    showInfo={false}
+                    strokeWidth={8}
+                    className="dimension-progress"
+                  />
+                  <div className="dimension-explanation">
+                    {getDimensionExplanation('S', result.dimensionLevels.S)}
+                  </div>
+                </DimensionCard>
+              </div>
+
+              <div className="dimension-card dimension-a">
+                <DimensionCard>
+                  <div className="dimension-header">
+                    <Text strong className="dimension-name">个人空间</Text>
+                    <Tag
+                      className="dimension-tag"
+                      color={getDimensionColor(result.dimensionLevels.A)}
+                    >
+                      {result.dimensionLevels.A} ({result.dimensions.A}分)
+                    </Tag>
+                  </div>
+                  <Progress
+                    percent={result.dimensions.A}
+                    strokeColor={getDimensionColor(result.dimensionLevels.A)}
+                    showInfo={false}
+                    strokeWidth={8}
+                    className="dimension-progress"
+                  />
+                  <div className="dimension-explanation">
+                    {getDimensionExplanation('A', result.dimensionLevels.A)}
+                  </div>
+                </DimensionCard>
+              </div>
+
+              <div className="dimension-card dimension-g">
+                <DimensionCard>
+                  <div className="dimension-header">
+                    <Text strong className="dimension-name">共同成长</Text>
+                    <Tag
+                      className="dimension-tag"
+                      color={getDimensionColor(result.dimensionLevels.G)}
+                    >
+                      {result.dimensionLevels.G} ({result.dimensions.G}分)
+                    </Tag>
+                  </div>
+                  <Progress
+                    percent={result.dimensions.G}
+                    strokeColor={getDimensionColor(result.dimensionLevels.G)}
+                    showInfo={false}
+                    strokeWidth={8}
+                    className="dimension-progress"
+                  />
+                  <div className="dimension-explanation">
+                    {getDimensionExplanation('G', result.dimensionLevels.G)}
+                  </div>
+                </DimensionCard>
+              </div>
+
+              <div className="dimension-card dimension-r">
+                <DimensionCard>
+                  <div className="dimension-header">
+                    <Text strong className="dimension-name">现实务实</Text>
+                    <Tag
+                      className="dimension-tag"
+                      color={getDimensionColor(result.dimensionLevels.R)}
+                    >
+                      {result.dimensionLevels.R} ({result.dimensions.R}分)
+                    </Tag>
+                  </div>
+                  <Progress
+                    percent={result.dimensions.R}
+                    strokeColor={getDimensionColor(result.dimensionLevels.R)}
+                    showInfo={false}
+                    strokeWidth={8}
+                    className="dimension-progress"
+                  />
+                  <div className="dimension-explanation">
+                    {getDimensionExplanation('R', result.dimensionLevels.R)}
+                  </div>
+                </DimensionCard>
+              </div>
+
+              <div className="dimension-card dimension-e">
+                <DimensionCard>
+                  <div className="dimension-header">
+                    <Text strong className="dimension-name">情绪表达</Text>
+                    <Tag
+                      className="dimension-tag"
+                      color={getDimensionColor(result.dimensionLevels.E)}
+                    >
+                      {result.dimensionLevels.E} ({result.dimensions.E}分)
+                    </Tag>
+                  </div>
+                  <Progress
+                    percent={result.dimensions.E}
+                    strokeColor={getDimensionColor(result.dimensionLevels.E)}
+                    showInfo={false}
+                    strokeWidth={8}
+                    className="dimension-progress"
+                  />
+                  <div className="dimension-explanation">
+                    {getDimensionExplanation('E', result.dimensionLevels.E)}
+                  </div>
+                </DimensionCard>
+              </div>
+            </RadarContainer>
 
             <SectionCard title="关系中的优势与成长">
               <Row gutter={[20, 20]}>
