@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Card, Radio, Progress, Typography, Space, message } from 'antd';
+import { Button, Card, Radio, Progress, Typography, Space, message, Spin } from 'antd';
+import { HeartOutlined, ThunderboltOutlined, BulbOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { questions } from '../data/questions';
 import { calculateDimensions, normalizeScores, getDimensionLevel } from '../utils/calculator';
@@ -82,6 +83,65 @@ const NavigationButton = styled(Button)`
   min-width: 120px;
 `;
 
+// 加载页面样式
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  color: white;
+`;
+
+const LoadingContent = styled.div`
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+`;
+
+const LoadingTitle = styled.h2`
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+`;
+
+const LoadingSteps = styled.div`
+  margin: 30px 0;
+`;
+
+const LoadingStep = styled.div<{ isActive?: boolean }>`
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  opacity: ${props => props.isActive ? 1 : 0.3};
+  transition: opacity 0.5s ease;
+
+  .step-icon {
+    font-size: 1.2rem;
+    margin-right: 15px;
+  }
+
+  .step-text {
+    font-size: 1.1rem;
+    text-align: left;
+  }
+`;
+
+const LoadingProgress = styled(Progress)`
+  margin: 20px 0;
+
+  .ant-progress-text {
+    color: white;
+    font-weight: 600;
+  }
+`;
+
 const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResult) => void; answers: UserAnswer[] }> = ({
   onComplete,
   answers: initialAnswers
@@ -91,11 +151,48 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
   const [answers, setAnswers] = useState<UserAnswer[]>(initialAnswers);
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const currentQuestion = questions[currentQuestionIndex];
   // 根据实际已答题数计算进度，而不是题目索引
   const answeredCount = answers.filter(a => a.selectedOption).length;
   const progress = (answeredCount / questions.length) * 100;
+
+  // 加载步骤
+  const loadingSteps = [
+    { icon: <HeartOutlined />, text: '正在分析您的情感需求...' },
+    { icon: <ThunderboltOutlined />, text: '正在计算五维度性格特质...' },
+    { icon: <BulbOutlined />, text: '正在匹配最适合您的伴侣类型...' },
+    { icon: <HeartOutlined />, text: '正在生成个性化测评报告...' }
+  ];
+
+  // 加载组件
+  const LoadingComponent = () => (
+    <LoadingOverlay>
+      <LoadingContent>
+        <Spin size="large" />
+        <LoadingTitle>正在为您生成专属报告</LoadingTitle>
+        <LoadingSteps>
+          {loadingSteps.map((step, index) => (
+            <LoadingStep key={index} isActive={index === currentStep}>
+              <span className="step-icon">{step.icon}</span>
+              <span className="step-text">{step.text}</span>
+            </LoadingStep>
+          ))}
+        </LoadingSteps>
+        <LoadingProgress
+          percent={loadingProgress}
+          strokeColor={{
+            '0%': '#108ee9',
+            '100%': '#87d068',
+          }}
+          showInfo={true}
+        />
+      </LoadingContent>
+    </LoadingOverlay>
+  );
 
   useEffect(() => {
     // 如果有之前的答案，恢复当前题目的选择
@@ -159,12 +256,25 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
 
   // 直接提交测试，用于最后一题自动提交
   const submitTest = async () => {
-    if (isSubmitting) return; // 防止重复提交
+    if (isSubmitting || isLoading) return; // 防止重复提交
 
     setIsSubmitting(true);
+    setIsLoading(true);
 
     try {
-      // 使用当前已保存的答案
+      // 开始加载过程
+      const totalDuration = 5000; // 总共5秒
+      const steps = loadingSteps.length;
+      const stepDuration = totalDuration / steps;
+
+      // 逐步更新加载状态
+      for (let i = 0; i < steps; i++) {
+        await new Promise(resolve => setTimeout(resolve, stepDuration));
+        setCurrentStep(i);
+        setLoadingProgress(((i + 1) / steps) * 100);
+      }
+
+      // 实际计算过程（在后台进行）
       const finalAnswers = [...answers];
       finalAnswers.sort((a, b) => a.questionId - b.questionId);
 
@@ -185,6 +295,9 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
         partnerTypes
       );
 
+      // 确保至少5秒已经过去
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       onComplete(finalAnswers, result);
       history.push('/result');
     } catch (error) {
@@ -192,6 +305,9 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
       console.error('Calculation error:', error);
     } finally {
       setIsSubmitting(false);
+      setIsLoading(false);
+      setLoadingProgress(0);
+      setCurrentStep(0);
     }
   };
 
@@ -222,7 +338,9 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
   const hasPrevious = currentQuestionIndex > 0;
 
   return (
-    <TestContainer>
+    <>
+      {isLoading && <LoadingComponent />}
+      <TestContainer>
       <QuestionCard>
         <QuestionHeader>
           <ProgressContainer>
@@ -299,6 +417,7 @@ const TestPage: React.FC<{ onComplete: (answers: UserAnswer[], result: TestResul
         </ButtonContainer>
       </QuestionCard>
     </TestContainer>
+    </>
   );
 };
 
