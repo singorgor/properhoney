@@ -9,10 +9,15 @@
       }
     }
   ],
+  "outputDirectory": "adapter-lover/build",
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "adapter-lover/build/$1"
+      "dest": "/index.html"
     }
   ]
 }
