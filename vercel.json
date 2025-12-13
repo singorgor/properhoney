@@ -1,7 +1,17 @@
 {
   "version": 2,
-  "buildCommand": "cd adapter-lover && npm run build",
+  "builds": [
+    {
+      "src": "adapter-lover/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
   "outputDirectory": "adapter-lover/build",
+  "installCommand": "cd adapter-lover && npm ci",
+  "buildCommand": "cd adapter-lover && npm run build",
   "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
