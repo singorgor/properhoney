@@ -878,78 +878,7 @@ const ResultPage: React.FC<{ result: TestResult; onRestart: () => void }> = ({ r
     return generateUserDescription();
   };
 
-  // 生成详细的性格特征描述
-  const generateDetailedTraits = (result: TestResult) => {
-    const { mainType } = result;
-
-    const traitsLibrary = {
-      'stable-harbor': [
-        { trait: '稳重可靠', description: '做事脚踏实地，不会轻易许诺，但说到做到。在关键时刻总能给你最坚实的依靠。' },
-        { trait: '善于倾听', description: '愿意花时间理解你的想法和感受，是很好的倾诉对象。' },
-        { trait: '情绪稳定', description: '很少有大的情绪波动，能够在你焦虑时给予平静的力量。' },
-        { trait: '责任心强', description: '对感情认真负责，会把你们的关系放在重要位置。' },
-        { trait: '包容理解', description: '能够理解和接纳你的不完美，在你犯错时给予宽容。' }
-      ],
-      'shoulder-to-shoulder': [
-        { trait: '目标明确', description: '对自己的人生有清晰规划，并且愿意与你一起实现共同目标。' },
-        { trait: '相互尊重', description: '尊重你的个人空间和独立人格，不会试图改变你。' },
-        { trait: '共同成长', description: '希望和伴侣一起进步，会支持你的发展和学习。' },
-        { trait: '理性思考', description: '遇到问题时能够冷静分析，不会被情绪左右判断。' },
-        { trait: '平等意识', description: '在关系中追求平等，愿意承担相应的责任和义务。' }
-      ],
-      'nurturing-caregiver': [
-        { trait: '细心体贴', description: '能够察觉到你细微的情绪变化，并给予适时的关心。' },
-        { trait: '温暖包容', description: '像春天的阳光一样温暖，能够治愈你的疲惫和不安。' },
-        { trait: '善于照顾', description: '在生活中会主动照顾你的起居，让你感受到被爱。' },
-        { trait: '情感丰富', description: '内心柔软，能够与你产生深层的情感共鸣。' },
-        { trait: '耐心包容', description: '对你有足够的耐心，愿意等待和理解你的成长。' }
-      ],
-      'soul-conversationalist': [
-        { trait: '深度思考', description: '喜欢探讨人生的意义和价值，能够与你进行精神层面的交流。' },
-        { trait: '善于表达', description: '能够准确表达自己的想法和感受，不会让你猜测。' },
-        { trait: '幽默风趣', description: '有独特的幽默感，能够让平淡的生活变得有趣。' },
-        { trait: '知识渊博', description: '在多个领域都有所涉猎，能够与你分享丰富的见解。' },
-        { trait: '思想开放', description: '对新鲜事物保持开放态度，愿意尝试不同的可能性。' }
-      ],
-      'free-companion': [
-        { trait: '独立自主', description: '有自己的生活和朋友，不会过度依赖你。' },
-        { trait: '尊重自由', description: '理解并尊重你的个人空间和自由选择。' },
-        { trait: '开放包容', description: '对不同的人和事都有包容的态度，不会轻易评判。' },
-        { trait: '富有创造力', description: '在生活和工作中都能带来新鲜的创意和想法。' },
-        { trait: '充满活力', description: '对生活保持热情，能够带动你一起探索新鲜事物。' }
-      ],
-      'rational-partner': [
-        { trait: '逻辑清晰', description: '思维方式清晰有条理，能够帮你理清复杂的问题。' },
-        { trait: '客观公正', description: '能够客观看待问题，不会被主观情绪影响判断。' },
-        { trait: '善于分析', description: '能够分析事物的本质和规律，给出有建设性的建议。' },
-        { trait: '决策果断', description: '在重要时刻能够做出清晰的决策，不会犹豫不决。' },
-        { trait: '追求效率', description: '做事讲究效率和方法，能够帮助你优化生活和工作。' }
-      ],
-      'reliable-pragmatist': [
-        { trait: '务实踏实', description: '做事实在在，不喜欢空谈，注重实际行动。' },
-        { trait: '有责任心', description: '对自己的承诺负责到底，是一个可以依靠的人。' },
-        { trait: '生活技能强', description: '在日常生活中很能干，能够处理各种实际问题。' },
-        { trait: '价值观明确', description: '有自己的是非标准，能够坚持正确的事情。' },
-        { trait: '执行力强', description: '想到什么就会立即行动，不会拖延和犹豫。' }
-      ],
-      'emotional-resonator': [
-        { trait: '敏感细腻', description: '能够察觉到你细微的情绪变化，给予及时的关怀。' },
-        { trait: '共情能力强', description: '能够站在你的角度思考问题，真正理解你的感受。' },
-        { trait: '善于感受', description: '对美好的事物有敏锐的感受力，能够和你分享生活的喜悦。' },
-        { trait: '表达真挚', description: '情感表达很真诚，不会让你觉得虚伪或不真实。' },
-        { trait: '浪漫诗意', description: '能够在平凡的生活中创造浪漫和诗意。' }
-      ]
-    };
-
-    const traits = traitsLibrary[mainType.id as keyof typeof traitsLibrary] || [];
-
-    return traits.map((item, index) => (
-      <div key={index} style={{ marginBottom: '8px' }}>
-        <strong>{item.trait}：</strong>{item.description}
-      </div>
-    ));
-  };
-
+  
   // 生成增强的核心特质描述
   const generateEnhancedCoreTraits = (result: TestResult) => {
     const { mainType } = result;
