@@ -1,19 +1,20 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "adapter-lover/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    }
-  ],
+  "buildCommand": "cd adapter-lover && npm run build",
   "outputDirectory": "adapter-lover/build",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "routes": [
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg))",
+      "dest": "/$1"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
