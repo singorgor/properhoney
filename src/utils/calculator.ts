@@ -31,44 +31,42 @@ export function normalizeScores(scores: Dimensions): Dimensions {
     const dimensionKey = key as keyof Dimensions;
     const rawScore = scores[dimensionKey];
 
-    // 优化后的归一化算法（v3.0 - 基于相对标准化）
+    // 优化后的归一化算法（v4.0 - 修正版）
     //
-    // 问题分析：
-    // - 所有选项都是正分，导致每个维度至少有基础分
-    // - 原始算法会导致所有维度都在中高区间
+    // 实际情况分析：
+    // - 每个维度8道题，每题至少有1个选项会给该维度加分
+    // - 但很多选项给其他维度加分，或不给该维度加分
+    // - 因此实际得分范围可能比预期更宽：最低约3-5分，最高约30-35分
     //
-    // 新策略：基于相对位置进行标准化
-    // - 假设理论最低分约 8分（每题最低1分）
-    // - 假设理论最高分约 32分（每题最高4分，加上跨维度加分）
-    // - 使用相对位置映射到 0-100 分
-    //
+    // 新策略：使用更合理的范围映射
     let normalizedScore: number;
 
-    // 基于实际答题情况的理论范围
-    const minPossible = 8;   // 理论最低分（每题都选最低分选项）
-    const maxPossible = 32;  // 理论最高分（每题都选最高分选项 + 跨维度加分）
+    // 基于实际答题的合理范围
+    const minPossible = 3;   // 极低得分（几乎该维度的题目都选0分选项）
+    const maxPossible = 35;  // 极高得分（该维度题目都选高分 + 跨维度加分）
     const range = maxPossible - minPossible;
 
-    // 计算相对位置
+    // 计算相对位置（0-1之间）
     let relativePos = (rawScore - minPossible) / range;
-    relativePos = Math.max(0, Math.min(1, relativePos)); // 限制在0-1之间
+    relativePos = Math.max(0, Math.min(1, relativePos));
 
-    // 使用非线性映射，增强区分度
-    if (relativePos <= 0.2) {
-      // 最低20%映射到 0-20分
+    // 使用分段线性映射，确保中等分数映射到中等区间
+    // 目标：原始分15分（中等）应该映射到约50分
+    if (relativePos <= 0.25) {
+      // 0%-25% → 0-25分
       normalizedScore = Math.round(relativePos * 100);
     } else if (relativePos <= 0.5) {
-      // 20%-50%映射到 20-45分
-      normalizedScore = Math.round(20 + (relativePos - 0.2) * 83.33);
-    } else if (relativePos <= 0.8) {
-      // 50%-80%映射到 45-75分
-      normalizedScore = Math.round(45 + (relativePos - 0.5) * 100);
+      // 25%-50% → 25-50分
+      normalizedScore = Math.round(25 + (relativePos - 0.25) * 100);
+    } else if (relativePos <= 0.75) {
+      // 50%-75% → 50-75分
+      normalizedScore = Math.round(50 + (relativePos - 0.5) * 100);
     } else {
-      // 80%-100%映射到 75-100分
-      normalizedScore = Math.round(75 + (relativePos - 0.8) * 125);
+      // 75%-100% → 75-100分
+      normalizedScore = Math.round(75 + (relativePos - 0.75) * 100);
     }
 
-    normalized[dimensionKey] = normalizedScore;
+    normalized[dimensionKey] = Math.max(0, Math.min(100, normalizedScore));
   });
 
   return normalized;
