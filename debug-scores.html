@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分数调试工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 { color: #333; }
+        h2 { color: #666; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .score-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+        .dimension-display {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-width: 150px;
+        }
+        .dimension-label {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .dimension-S { border-left: 4px solid #f48771; }
+        .dimension-A { border-left: 4px solid #4ec9b0; }
+        .dimension-G { border-left: 4px solid #dcdcaa; }
+        .dimension-R { border-left: 4px solid #569cd6; }
+        .dimension-E { border-left: 4px solid #c586c0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 理想伴侣测试 - 分数调试工具</h1>
+
+    <div class="container">
+        <h2>测试模式选择</h2>
+        <button class="btn" onclick="testAllA()">全部选A</button>
+        <button class="btn" onclick="testAllB()">全部选B</button>
+        <button class="btn" onclick="testAllC()">全部选C</button>
+        <button class="btn" onclick="testAllD()">全部选D</button>
+        <button class="btn" onclick="testRandom()">随机选择</button>
+        <button class="btn" onclick="testMixed()">混合选择</button>
+    </div>
+
+    <div class="container">
+        <h2>原始分数 (Raw Scores)</h2>
+        <div id="rawScores"></div>
+    </div>
+
+    <div class="container">
+        <h2>归一化分数 (Normalized Scores 0-100)</h2>
+        <div id="normalizedScores"></div>
+    </div>
+
+    <div class="container">
+        <h2>与各伴侣类型的适配度</h2>
+        <div id="compatibility"></div>
+    </div>
+
+    <div class="container">
+        <h2>问题分析</h2>
+        <div id="analysis"></div>
+    </div>
+
+    <script>
+        // 模拟题目数据 (简化版,每题4个选项)
+        const questionCategories = [];
+        for (let i = 1; i <= 40; i++) {
+            const category = ['S','A','G','R','E'][(i-1) % 5];
+            questionCategories.push(category);
+        }
+
+        // 模拟选项分数
+        const optionScores = {
+            'A': { S: 1, A: 1, G: 1, R: 1, E: 1 },
+            'B': { S: 2, A: 2, G: 2, R: 2, E: 2 },
+            'C': { S: 3, A: 3, G: 3, R: 3, E: 3 },
+            'D': { S: 4, A: 4, G: 4, R: 4, E: 4 }
+        };
+
+        // 实际的题目分数配置 (从questions.ts提取的真实数据)
+        const realQuestions = [
+            // 题目1 - S维度
+            { id: 1, category: 'S', options: [
+                { id: 'A', scores: { S: 1, A: 1 } },
+                { id: 'B', scores: { S: 2, E: 1 } },
+                { id: 'C', scores: { A: 2 } },
+                { id: 'D', scores: { S: 3, E: 1 } }
+            ]},
+            // 题目2 - S维度
+            { id: 2, category: 'S', options: [
+                { id: 'A', scores: { A: 2 } },
+                { id: 'B', scores: { S: 3 } },
+                { id: 'C', scores: { S: 2, E: 1 } },
+                { id: 'D', scores: { S: 2 } }
+            ]},
+            // 题目3 - S维度
+            { id: 3, category: 'S', options: [
+                { id: 'A', scores: { A: 1 } },
+                { id: 'B', scores: { S: 1 } },
+                { id: 'C', scores: { S: 3, R: 1 } },
+                { id: 'D', scores: { S: 2 } }
+            ]}
+            // ... 可以继续添加更多题目
+        ];
+
+        // 伴侣类型
+        const partnerTypes = [
+            { name: '稳定港湾型', idealProfile: { S: 85, A: 30, G: 40, R: 80, E: 35 } },
+            { name: '并肩打拼型', idealProfile: { S: 45, A: 45, G: 90, R: 65, E: 30 } },
+            { name: '滋养照顾型', idealProfile: { S: 90, A: 20, G: 30, R: 25, E: 85 } },
+            { name: '灵魂对谈型', idealProfile: { S: 45, A: 80, G: 60, R: 20, E: 90 } },
+            { name: '自由同伴型', idealProfile: { S: 25, A: 90, G: 45, R: 30, E: 30 } },
+            { name: '理性拍档型', idealProfile: { S: 15, A: 40, G: 60, R: 90, E: 5 } },
+            { name: '现实靠谱型', idealProfile: { S: 30, A: 30, G: 80, R: 90, E: 20 } },
+            { name: '情绪共振型', idealProfile: { S: 80, A: 25, G: 25, R: 15, E: 90 } }
+        ];
+
+        // 计算原始分数
+        function calculateRawScores(answers) {
+            const scores = { S: 0, A: 0, G: 0, R: 0, E: 0 };
+
+            // 使用简化版本: 每题根据选择的选项加分
+            for (let i = 0; i < 40; i++) {
+                const option = answers[i];
+                const category = ['S','A','G','R','E'][i % 5];
+                const baseScore = { 'A': 1, 'B': 2, 'C': 3, 'D': 4 }[option];
+
+                // 主要维度加分
+                scores[category] += baseScore;
+
+                // 模拟跨维度加分 (简化)
+                if (category === 'S' && option === 'A') scores.A += 1;
+                if (category === 'S' && (option === 'B' || option === 'D')) scores.E += 1;
+                if (category === 'S' && option === 'C') scores.R += 1;
+            }
+
+            return scores;
+        }
+
+        // 归一化函数
+        function normalizeScores(scores) {
+            const normalized = { S: 0, A: 0, G: 0, R: 0, E: 0 };
+            Object.keys(scores).forEach(key => {
+                const raw = scores[key];
+                let norm;
+                if (raw <= 10) norm = raw * 3;
+                else if (raw <= 20) norm = 30 + (raw - 10) * 3;
+                else if (raw <= 30) norm = 60 + (raw - 20) * 2.8;
+                else if (raw <= 35) norm = 88 + (raw - 30) * 1.4;
+                else norm = Math.min(100, 95 + (raw - 35) * 0.5);
+                normalized[key] = Math.max(0, Math.min(100, Math.round(norm)));
+            });
+            return normalized;
+        }
+
+        // 计算差异
+        function calculateDifference(profile1, profile2) {
+            const dims = ['S', 'A', 'G', 'R', 'E'];
+            let total = 0;
+            dims.forEach(d => {
+                total += Math.abs(profile1[d] - profile2[d]);
+            });
+            return total / dims.length;
+        }
+
+        // 计算适配度
+        function calculateCompatibility(difference) {
+            if (difference <= 15) return Math.round(90 + (15 - difference) * 0.67);
+            else if (difference <= 25) return Math.round(70 + (25 - difference) * 2);
+            else if (difference <= 35) return Math.round(50 + (35 - difference) * 2);
+            else if (difference <= 45) return Math.round(30 + (45 - difference) * 2);
+            else if (difference <= 55) return Math.round(10 + (55 - difference) * 2);
+            else return Math.max(0, Math.round(10 - (difference - 55) * 0.5));
+        }
+
+        // 显示分数
+        function displayScores(raw, normalized) {
+            const dims = ['S', 'A', 'G', 'R', 'E'];
+            const dimNames = {
+                S: '情感安全感 (S)',
+                A: '自主空间 (A)',
+                G: '共同成长 (G)',
+                R: '现实务实 (R)',
+                E: '情绪共鸣 (E)'
+            };
+
+            let rawHtml = '';
+            let normHtml = '';
+
+            dims.forEach(dim => {
+                rawHtml += `
+                    <div class="dimension-display dimension-${dim}">
+                        <div class="dimension-label">${dim}</div>
+                        <div style="font-size:24px;color:#333;">${raw[dim]}</div>
+                        <div style="font-size:12px;color:#666;">${dimNames[dim]}</div>
+                    </div>
+                `;
+
+                normHtml += `
+                    <div class="dimension-display dimension-${dim}">
+                        <div class="dimension-label">${dim}</div>
+                        <div style="font-size:24px;color:#333;">${normalized[dim]}</div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width:${normalized[dim]}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('rawScores').innerHTML = rawHtml;
+            document.getElementById('normalizedScores').innerHTML = normHtml;
+        }
+
+        // 显示适配度
+        function displayCompatibility(userProfile) {
+            let html = '<table><tr><th>伴侣类型</th><th>差异度</th><th>适配度</th><th>排名</th></tr>';
+
+            const results = partnerTypes.map(type => {
+                const diff = calculateDifference(userProfile, type.idealProfile);
+                const compat = calculateCompatibility(diff);
+                return { name: type.name, diff, compatibility: compat };
+            });
+
+            results.sort((a, b) => b.compatibility - a.compatibility);
+
+            results.forEach((r, i) => {
+                const color = i === 0 ? '#4CAF50' : (i === results.length - 1 ? '#f44336' : '#333');
+                html += `
+                    <tr style="color:${color};font-weight:${i === 0 || i === results.length - 1 ? 'bold' : 'normal'}">
+                        <td>${r.name}</td>
+                        <td>${r.diff.toFixed(1)}</td>
+                        <td>${r.compatibility}%</td>
+                        <td>${i + 1}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</table>';
+            document.getElementById('compatibility').innerHTML = html;
+        }
+
+        // 分析问题
+        function analyzeResults(userProfile) {
+            let html = '';
+
+            // 找出最高和最低维度
+            const dims = ['S', 'A', 'G', 'R', 'E'];
+            const sorted = dims.map(d => ({ dim: d, score: userProfile[d] }))
+                              .sort((a, b) => b.score - a.score);
+
+            html += `<div class="alert alert-warning">
+                <strong>⚠️ 关键发现:</strong><br>
+                最高维度: ${sorted[0].dim} (${sorted[0].score}分)<br>
+                最低维度: ${sorted[sorted.length-1].dim} (${sorted[sorted.length-1].score}分)<br>
+                分数极差: ${sorted[0].score - sorted[sorted.length-1].score}分
+            </div>`;
+
+            // 问题分析
+            const avgScore = sorted.reduce((sum, s) => sum + s.score, 0) / 5;
+            html += `<div class="alert alert-warning">
+                <strong>🔍 问题诊断:</strong><br>
+                平均分数: ${avgScore.toFixed(1)}分<br>
+            `;
+
+            if (avgScore > 70) {
+                html += `⚠️ <strong>所有维度分数都偏高!</strong> 这会导致所有类型适配度都接近,无法有效区分。<br>`;
+                html += `<strong>建议:</strong> 需要调整归一化算法,或者题目选项需要有不同的分数方向。`;
+            } else if (avgScore < 40) {
+                html += `⚠️ <strong>所有维度分数都偏低!</strong><br>`;
+            } else {
+                html += `✅ 分数分布较为合理。`;
+            }
+
+            html += `</div>`;
+
+            document.getElementById('analysis').innerHTML = html;
+        }
+
+        // 测试函数
+        function runTest(answers) {
+            const raw = calculateRawScores(answers);
+            const normalized = normalizeScores(raw);
+            displayScores(raw, normalized);
+            displayCompatibility(normalized);
+            analyzeResults(normalized);
+        }
+
+        function testAllA() {
+            const answers = new Array(40).fill('A');
+            runTest(answers);
+        }
+
+        function testAllB() {
+            const answers = new Array(40).fill('B');
+            runTest(answers);
+        }
+
+        function testAllC() {
+            const answers = new Array(40).fill('C');
+            runTest(answers);
+        }
+
+        function testAllD() {
+            const answers = new Array(40).fill('D');
+            runTest(answers);
+        }
+
+        function testRandom() {
+            const options = ['A', 'B', 'C', 'D'];
+            const answers = Array.from({length: 40}, () => options[Math.floor(Math.random() * 4)]);
+            runTest(answers);
+        }
+
+        function testMixed() {
+            // 模拟偏S维度的选择
+            const answers = [];
+            for (let i = 0; i < 40; i++) {
+                const category = ['S','A','G','R','E'][i % 5];
+                if (category === 'S') {
+                    answers.push('D'); // S维度选高分
+                } else if (category === 'E') {
+                    answers.push('C'); // E维度选中高分
+                } else {
+                    answers.push('A'); // 其他选低分
+                }
+            }
+            runTest(answers);
+        }
+
+        // 页面加载后自动运行一次测试
+        window.addEventListener('load', () => {
+            testAllC(); // 默认测试全选C
+        });
+    </script>
+</body>
+</html>

@@ -6,7 +6,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'stable-harbor',
     name: '稳定港湾型',
     description: '情感稳定、可靠务实、能提供强烈安全感的人',
-    idealProfile: { S: 80, A: 40, G: 50, R: 70, E: 50 },
+    idealProfile: { S: 85, A: 30, G: 40, R: 80, E: 35 },
     characteristics: {
       personality: [
         '沉稳可靠：无论遇到什么困难都能保持冷静，给人强烈的安全感',
@@ -45,7 +45,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'shoulder-to-shoulder',
     name: '并肩打拼型',
     description: '有强烈事业心、目标明确、愿意共同奋斗的伙伴',
-    idealProfile: { S: 50, A: 50, G: 85, R: 70, E: 40 },
+    idealProfile: { S: 45, A: 45, G: 90, R: 65, E: 30 },
     characteristics: {
       personality: [
         '目标导向：对自己的人生有清晰规划，每一步都朝着既定目标前进',
@@ -84,7 +84,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'nurturing-caregiver',
     name: '滋养照顾型',
     description: '善于照顾他人、情感细腻、乐于付出的伴侣',
-    idealProfile: { S: 85, A: 30, G: 40, R: 40, E: 80 },
+    idealProfile: { S: 90, A: 20, G: 30, R: 25, E: 85 },
     characteristics: {
       personality: [
         '细腻体贴：能够敏锐察觉他人的需求，在细节处体现关怀',
@@ -123,7 +123,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'soul-conversationalist',
     name: '灵魂对谈型',
     description: '精神追求强烈、善于深度交流、重视思想共鸣的伴侣',
-    idealProfile: { S: 50, A: 70, G: 60, R: 30, E: 85 },
+    idealProfile: { S: 45, A: 80, G: 60, R: 20, E: 90 },
     characteristics: {
       personality: [
         '思想深刻：对事物有独特的见解和深刻的理解，不满足于表面现象',
@@ -162,7 +162,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'free-companion',
     name: '自由同伴型',
     description: '重视个人自由、边界清晰、关系轻松灵活的伴侣',
-    idealProfile: { S: 40, A: 90, G: 50, R: 40, E: 40 },
+    idealProfile: { S: 25, A: 90, G: 45, R: 30, E: 30 },
     characteristics: {
       personality: [
         '独立自主：有自己的生活节奏和兴趣，不会过度依赖他人',
@@ -201,7 +201,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'rational-partner',
     name: '理性拍档型',
     description: '逻辑思维强、善于分析解决问题、沟通高效的伴侣',
-    idealProfile: { S: 30, A: 50, G: 60, R: 80, E: 20 },
+    idealProfile: { S: 15, A: 40, G: 60, R: 90, E: 5 },
     characteristics: {
       personality: [
         '理性冷静：遇到问题不会慌乱，能够冷静分析并找到解决方案',
@@ -240,7 +240,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'reliable-pragmatist',
     name: '现实靠谱型',
     description: '脚踏实地、执行力强、注重实际结果的伴侣',
-    idealProfile: { S: 40, A: 40, G: 70, R: 90, E: 30 },
+    idealProfile: { S: 30, A: 30, G: 80, R: 90, E: 20 },
     characteristics: {
       personality: [
         '踏实稳重：一步一个脚印，不会好高骛远，做事非常可靠',
@@ -279,7 +279,7 @@ export const partnerTypes: PartnerType[] = [
     id: 'emotional-resonator',
     name: '情绪共振型',
     description: '情感丰富、善于共情、情绪价值高的伴侣',
-    idealProfile: { S: 80, A: 30, G: 40, R: 30, E: 90 },
+    idealProfile: { S: 80, A: 25, G: 25, R: 15, E: 90 },
     characteristics: {
       personality: [
         '情感丰富：内心世界充实，能够体验到丰富的情感层次',

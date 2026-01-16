@@ -27,19 +27,48 @@ export function calculateDimensions(answers: UserAnswer[], questions: Question[]
 export function normalizeScores(scores: Dimensions): Dimensions {
   const normalized: Dimensions = { S: 0, A: 0, G: 0, R: 0, E: 0 };
 
-  // 40道题，每道题单个维度最高3分
-  // 每个维度大约8道题，最高约24分
-  // 调整映射范围使其更合理
-  const minScore = 0;
-  const maxScore = 24;
-
   Object.keys(scores).forEach(key => {
     const dimensionKey = key as keyof Dimensions;
     const rawScore = scores[dimensionKey];
-    // 线性映射到0-100
-    normalized[dimensionKey] = Math.round(((rawScore - minScore) / (maxScore - minScore)) * 100);
-    // 确保在0-100范围内
-    normalized[dimensionKey] = Math.max(0, Math.min(100, normalized[dimensionKey]));
+
+    // 优化后的归一化算法（v3.0 - 基于相对标准化）
+    //
+    // 问题分析：
+    // - 所有选项都是正分，导致每个维度至少有基础分
+    // - 原始算法会导致所有维度都在中高区间
+    //
+    // 新策略：基于相对位置进行标准化
+    // - 假设理论最低分约 8分（每题最低1分）
+    // - 假设理论最高分约 32分（每题最高4分，加上跨维度加分）
+    // - 使用相对位置映射到 0-100 分
+    //
+    let normalizedScore: number;
+
+    // 基于实际答题情况的理论范围
+    const minPossible = 8;   // 理论最低分（每题都选最低分选项）
+    const maxPossible = 32;  // 理论最高分（每题都选最高分选项 + 跨维度加分）
+    const range = maxPossible - minPossible;
+
+    // 计算相对位置
+    let relativePos = (rawScore - minPossible) / range;
+    relativePos = Math.max(0, Math.min(1, relativePos)); // 限制在0-1之间
+
+    // 使用非线性映射，增强区分度
+    if (relativePos <= 0.2) {
+      // 最低20%映射到 0-20分
+      normalizedScore = Math.round(relativePos * 100);
+    } else if (relativePos <= 0.5) {
+      // 20%-50%映射到 20-45分
+      normalizedScore = Math.round(20 + (relativePos - 0.2) * 83.33);
+    } else if (relativePos <= 0.8) {
+      // 50%-80%映射到 45-75分
+      normalizedScore = Math.round(45 + (relativePos - 0.5) * 100);
+    } else {
+      // 80%-100%映射到 75-100分
+      normalizedScore = Math.round(75 + (relativePos - 0.8) * 125);
+    }
+
+    normalized[dimensionKey] = normalizedScore;
   });
 
   return normalized;
@@ -69,7 +98,29 @@ export function calculateDifference(profile1: Dimensions, profile2: Dimensions):
 
 // 计算适配度百分比
 export function calculateCompatibility(difference: number): number {
-  // 差异越小，适配度越高
-  // 差异为0时，适配度为100%；差异为100时，适配度为0
-  return Math.max(0, Math.round(100 - difference));
+  // 改进的适配度计算算法（最终优化版）
+  // 考虑到实际得分范围通常在 0-100 分之间
+  // 平均差异通常在 15-45 分之间
+  //
+  // 新的映射策略（更严格的曲线）：
+  // 差异 0-15 分 → 90-100% (非常适配)
+  // 差异 15-25 分 → 70-90% (较好适配)
+  // 差异 25-35 分 → 50-70% (中等适配)
+  // 差异 35-45 分 → 30-50% (较低适配)
+  // 差异 45-55 分 → 10-30% (低适配)
+  // 差异 55+ 分 → 0-10% (不适配)
+
+  if (difference <= 15) {
+    return Math.round(90 + (15 - difference) * 0.67); // 90-100%
+  } else if (difference <= 25) {
+    return Math.round(70 + (25 - difference) * 2); // 70-90%
+  } else if (difference <= 35) {
+    return Math.round(50 + (35 - difference) * 2); // 50-70%
+  } else if (difference <= 45) {
+    return Math.round(30 + (45 - difference) * 2); // 30-50%
+  } else if (difference <= 55) {
+    return Math.round(10 + (55 - difference) * 2); // 10-30%
+  } else {
+    return Math.max(0, Math.round(10 - (difference - 55) * 0.5)); // 0-10%
+  }
 }

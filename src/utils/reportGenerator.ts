@@ -113,21 +113,81 @@ const emotionalTypes: Record<string, Omit<EmotionalType, 'id'> & { id?: string }
 export function getEmotionalType(dimensions: Dimensions): EmotionalType {
   const { S, A, G, R, E } = dimensions;
 
-  // 根据维度组合确定情感类型
-  if (S >= 70 && E >= 70) {
-    return { ...emotionalTypes['passionate-connector'], id: 'passionate-connector' };
-  } else if (A >= 70 && S <= 50) {
-    return { ...emotionalTypes['independent-explorer'], id: 'independent-explorer' };
-  } else if (R >= 70 && G >= 50) {
-    return { ...emotionalTypes['balanced-builder'], id: 'balanced-builder' };
-  } else if (E >= 70 && S >= 50) {
-    return { ...emotionalTypes['warm-seeker'], id: 'warm-seeker' };
-  } else if (R >= 70 && E <= 50) {
-    return { ...emotionalTypes['rational-analyst'], id: 'rational-analyst' };
-  } else {
-    // 默认返回平衡型
-    return { ...emotionalTypes['balanced-builder'], id: 'balanced-builder' };
+  // 找出得分最高的两个维度
+  const sortedDimensions = [
+    { key: 'S', score: S },
+    { key: 'A', score: A },
+    { key: 'G', score: G },
+    { key: 'R', score: R },
+    { key: 'E', score: E }
+  ].sort((a, b) => b.score - a.score);
+
+  const dominant1 = sortedDimensions[0];
+  const dominant2 = sortedDimensions[1];
+
+  // 基于主导维度组合确定情感类型
+  // 优先考虑主导维度得分较高的情况（至少55分以上）
+
+  // S + E 主导 → 热情连接者（情感丰富，需要深度连接）
+  if ((dominant1.key === 'S' && dominant2.key === 'E') || (dominant1.key === 'E' && dominant2.key === 'S')) {
+    if (dominant1.score >= 55 && dominant2.score >= 55) {
+      return { ...emotionalTypes['passionate-connector'], id: 'passionate-connector' };
+    }
   }
+
+  // S + R 主导 → 温暖寻求者（需要安全感和实际保障）
+  if ((dominant1.key === 'S' && dominant2.key === 'R') || (dominant1.key === 'R' && dominant2.key === 'S')) {
+    if (dominant1.score >= 55 && dominant2.score >= 55) {
+      return { ...emotionalTypes['warm-seeker'], id: 'warm-seeker' };
+    }
+  }
+
+  // A + E 主导 → 独立探索者（重视自由和精神世界）
+  if ((dominant1.key === 'A' && dominant2.key === 'E') || (dominant1.key === 'E' && dominant2.key === 'A')) {
+    if (dominant1.score >= 55 && dominant2.score >= 55) {
+      return { ...emotionalTypes['independent-explorer'], id: 'independent-explorer' };
+    }
+  }
+
+  // G + R 主导 → 平衡建造者（务实且有成长心）
+  if ((dominant1.key === 'G' && dominant2.key === 'R') || (dominant1.key === 'R' && dominant2.key === 'G')) {
+    if (dominant1.score >= 55 && dominant2.score >= 55) {
+      return { ...emotionalTypes['balanced-builder'], id: 'balanced-builder' };
+    }
+  }
+
+  // R 单维度主导且 E 较低 → 理性分析者（极度理性）
+  if (dominant1.key === 'R' && dominant1.score >= 70 && E <= 50) {
+    return { ...emotionalTypes['rational-analyst'], id: 'rational-analyst' };
+  }
+
+  // E 单维度主导且 S 较高 → 温暖寻求者
+  if (dominant1.key === 'E' && dominant1.score >= 70 && S >= 55) {
+    return { ...emotionalTypes['warm-seeker'], id: 'warm-seeker' };
+  }
+
+  // A 单维度主导且 S 较低 → 独立探索者
+  if (dominant1.key === 'A' && dominant1.score >= 70 && S <= 55) {
+    return { ...emotionalTypes['independent-explorer'], id: 'independent-explorer' };
+  }
+
+  // 默认：根据最高维度分配
+  if (dominant1.score >= 60) {
+    if (dominant1.key === 'E') {
+      return { ...emotionalTypes['passionate-connector'], id: 'passionate-connector' };
+    } else if (dominant1.key === 'S') {
+      return { ...emotionalTypes['warm-seeker'], id: 'warm-seeker' };
+    } else if (dominant1.key === 'A') {
+      return { ...emotionalTypes['independent-explorer'], id: 'independent-explorer' };
+    } else if (dominant1.key === 'R') {
+      return { ...emotionalTypes['rational-analyst'], id: 'rational-analyst' };
+    } else if (dominant1.key === 'G') {
+      return { ...emotionalTypes['balanced-builder'], id: 'balanced-builder' };
+    }
+  }
+
+  // 如果没有明显主导维度，返回平衡型
+  return { ...emotionalTypes['balanced-builder'], id: 'balanced-builder' };
 }
 
 // 生成伴侣画像
@@ -940,7 +1000,8 @@ export function generateRelationshipGuide(mainType: any, userDimensions: Dimensi
 
 // 生成匹配度分析
 export function generateCompatibilityAnalysis(userDimensions: Dimensions, partnerType: any): CompatibilityAnalysis {
-  const compatibility = 100 - calculateDifference(userDimensions, partnerType.idealProfile);
+  const difference = calculateDifference(userDimensions, partnerType.idealProfile);
+  const compatibility = calculateCompatibilityFromDifference(difference);
 
   return {
     overallCompatibility: compatibility,
@@ -994,6 +1055,23 @@ function calculateDifference(profile1: Dimensions, profile2: Dimensions): number
   });
 
   return totalDifference / dimensions.length;
+}
+
+// 统一的适配度计算函数（与 calculator.ts 保持一致）
+function calculateCompatibilityFromDifference(difference: number): number {
+  if (difference <= 15) {
+    return Math.round(90 + (15 - difference) * 0.67); // 90-100%
+  } else if (difference <= 25) {
+    return Math.round(70 + (25 - difference) * 2); // 70-90%
+  } else if (difference <= 35) {
+    return Math.round(50 + (35 - difference) * 2); // 50-70%
+  } else if (difference <= 45) {
+    return Math.round(30 + (45 - difference) * 2); // 30-50%
+  } else if (difference <= 55) {
+    return Math.round(10 + (55 - difference) * 2); // 10-30%
+  } else {
+    return Math.max(0, Math.round(10 - (difference - 55) * 0.5)); // 0-10%
+  }
 }
 
 // 生成各维度的分析

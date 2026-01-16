@@ -243,7 +243,7 @@ export const questions: Question[] = [
     category: 'G',
     text: '在谈未来时，你更自然提到的是？',
     options: [
-      { id: 'A', text: '想去哪些地方玩、过什么样的日常生活。', scores: {} },
+      { id: 'A', text: '想去哪些地方玩、过什么样的日常生活。', scores: { E: 1 } },
       { id: 'B', text: '大概会住在哪里、工作怎样、父母如何安排。', scores: { G: 1, R: 1 } },
       { id: 'C', text: '你们各自事业想发展到什么位置。', scores: { G: 2 } },
       { id: 'D', text: '可以一起做什么项目、投资、长期规划。', scores: { G: 3, R: 1 } }
@@ -415,7 +415,7 @@ export const questions: Question[] = [
       { id: 'A', text: '很受伤，觉得自己被否定。', scores: { E: 3, S: 1 } },
       { id: 'B', text: '有点不舒服，但会反思是不是自己真的太敏感。', scores: { E: 2 } },
       { id: 'C', text: '不太在乎，对方只是表达方式问题。', scores: { E: 1 } },
-      { id: 'D', text: '我本来就不太敏感，很少被这样说。', scores: {} }
+      { id: 'D', text: '我本来就不太敏感，很少被这样说。', scores: { R: 1 } }
     ]
   },
   {

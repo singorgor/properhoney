@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>理想伴侣测试 - 逻辑验证</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4ec9b0;
+            text-align: center;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #569cd6;
+            margin-top: 30px;
+            border-left: 4px solid #569cd6;
+            padding-left: 10px;
+        }
+        .test-user {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .test-user h3 {
+            color: #dcdcaa;
+            margin-top: 0;
+        }
+        .result {
+            background: #1e1e1e;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #4ec9b0;
+        }
+        .score {
+            color: #b5cea8;
+        }
+        .pass {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+        .fail {
+            color: #f48771;
+            font-weight: bold;
+        }
+        .warning {
+            color: #dcdcaa;
+            font-weight: bold;
+        }
+        .ranking {
+            display: inline-block;
+            margin: 2px 5px;
+            padding: 2px 8px;
+            background: #264f78;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .ranking:first-child {
+            background: #4ec9b0;
+            color: #1e1e1e;
+            font-weight: bold;
+        }
+        .summary {
+            background: #252526;
+            border: 2px solid #569cd6;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        .dimension-bar {
+            display: inline-block;
+            width: 100px;
+            height: 8px;
+            background: #3e3e42;
+            border-radius: 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        .dimension-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .dimension-S .dimension-fill { background: #f48771; }
+        .dimension-A .dimension-fill { background: #4ec9b0; }
+        .dimension-G .dimension-fill { background: #dcdcaa; }
+        .dimension-R .dimension-fill { background: #569cd6; }
+        .dimension-E .dimension-fill { background: #c586c0; }
+    </style>
+</head>
+<body>
+    <h1>理想伴侣测试 - 逻辑验证系统</h1>
+
+    <div style="text-align: center; margin: 20px 0;">
+        <button onclick="runAllTests()">🧪 运行所有测试</button>
+        <button onclick="clearResults()">🗑️ 清空结果</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script type="text/babel" data-presets="react,env">
+        // 这里会被实际的编译后的代码替换
+    </script>
+
+    <script>
+        // 由于无法直接在浏览器中运行 TypeScript，我们创建一个简化版测试
+        // 模拟核心逻辑
+
+        // 模拟问题数据
+        const questions = [];
+        for (let i = 1; i <= 40; i++) {
+            questions.push({ id: i, category: ['S','A','G','R','E'][(i-1) % 5], options: [
+                { id: 'A', scores: { S:1, A:1, G:1, R:1, E:1 } },
+                { id: 'B', scores: { S:2, A:2, G:2, R:2, E:2 } },
+                { id: 'C', scores: { S:3, A:3, G:3, R:3, E:3 } },
+                { id: 'D', scores: { S:4, A:4, G:4, R:4, E:4 } }
+            ]});
+        }
+
+        // 简化的计算函数
+        function calculateDimensions(answers) {
+            const scores = { S: 0, A: 0, G: 0, R: 0, E: 0 };
+            answers.forEach(answer => {
+                const question = questions.find(q => q.id === answer.questionId);
+                if (question) {
+                    const option = question.options.find(o => o.id === answer.selectedOption);
+                    if (option && option.scores) {
+                        Object.keys(option.scores).forEach(key => {
+                            scores[key] += option.scores[key];
+                        });
+                    }
+                }
+            });
+            return scores;
+        }
+
+        function normalizeScores(scores) {
+            const normalized = { S: 0, A: 0, G: 0, R: 0, E: 0 };
+            Object.keys(scores).forEach(key => {
+                const raw = scores[key];
+                let norm;
+                if (raw <= 10) norm = raw * 3;
+                else if (raw <= 20) norm = 30 + (raw - 10) * 3;
+                else if (raw <= 30) norm = 60 + (raw - 20) * 2.8;
+                else if (raw <= 35) norm = 88 + (raw - 30) * 1.4;
+                else norm = Math.min(100, 95 + (raw - 35) * 0.5);
+                normalized[key] = Math.max(0, Math.min(100, Math.round(norm)));
+            });
+            return normalized;
+        }
+
+        function calculateDifference(profile1, profile2) {
+            const dims = ['S', 'A', 'G', 'R', 'E'];
+            let total = 0;
+            dims.forEach(d => {
+                total += Math.abs(profile1[d] - profile2[d]);
+            });
+            return total / dims.length;
+        }
+
+        function calculateCompatibility(difference) {
+            if (difference <= 15) return Math.round(90 + (15 - difference) * 0.67);
+            else if (difference <= 25) return Math.round(70 + (25 - difference) * 2);
+            else if (difference <= 35) return Math.round(50 + (35 - difference) * 2);
+            else if (difference <= 45) return Math.round(30 + (45 - difference) * 2);
+            else if (difference <= 55) return Math.round(10 + (55 - difference) * 2);
+            else return Math.max(0, Math.round(10 - (difference - 55) * 0.5));
+        }
+
+        // 模拟伴侣类型
+        const partnerTypes = [
+            { id: 'stable-harbor', name: '稳定港湾型', idealProfile: { S: 85, A: 30, G: 40, R: 80, E: 35 } },
+            { id: 'shoulder-to-shoulder', name: '并肩打拼型', idealProfile: { S: 45, A: 45, G: 90, R: 65, E: 30 } },
+            { id: 'nurturing-caregiver', name: '滋养照顾型', idealProfile: { S: 90, A: 20, G: 30, R: 25, E: 85 } },
+            { id: 'soul-conversationalist', name: '灵魂对谈型', idealProfile: { S: 45, A: 80, G: 60, R: 20, E: 90 } },
+            { id: 'free-companion', name: '自由同伴型', idealProfile: { S: 25, A: 90, G: 45, R: 30, E: 30 } },
+            { id: 'rational-partner', name: '理性拍档型', idealProfile: { S: 15, A: 40, G: 60, R: 90, E: 5 } },
+            { id: 'reliable-pragmatist', name: '现实靠谱型', idealProfile: { S: 30, A: 30, G: 80, R: 90, E: 20 } },
+            { id: 'emotional-resonator', name: '情绪共振型', idealProfile: { S: 80, A: 25, G: 25, R: 15, E: 90 } }
+        ];
+
+        function matchPartnerTypes(userProfile) {
+            const results = partnerTypes.map(type => {
+                const diff = calculateDifference(userProfile, type.idealProfile);
+                const compatibility = calculateCompatibility(diff);
+                return { type, compatibility };
+            });
+            results.sort((a, b) => b.compatibility - a.compatibility);
+            return {
+                mainType: results[0].type,
+                avoidType: results[results.length - 1].type,
+                ranking: results
+            };
+        }
+
+        // 测试用户类型
+        const testUsers = [
+            {
+                name: '情感导向型用户',
+                description: '高安全感需求 + 高情感表达',
+                getAnswers: () => {
+                    const answers = [];
+                    for (let i = 1; i <= 40; i++) {
+                        const category = questions.find(q => q.id === i)?.category;
+                        if (category === 'S' || category === 'E') {
+                            answers.push({ questionId: i, selectedOption: 'D' });
+                        } else {
+                            answers.push({ questionId: i, selectedOption: 'B' });
+                        }
+                    }
+                    return answers;
+                }
+            },
+            {
+                name: '独立自由型用户',
+                description: '高自主需求 + 低情感依赖',
+                getAnswers: () => {
+                    const answers = [];
+                    for (let i = 1; i <= 40; i++) {
+                        const category = questions.find(q => q.id === i)?.category;
+                        if (category === 'A') {
+                            answers.push({ questionId: i, selectedOption: 'D' });
+                        } else if (category === 'S' || category === 'E') {
+                            answers.push({ questionId: i, selectedOption: 'A' });
+                        } else {
+                            answers.push({ questionId: i, selectedOption: 'C' });
+                        }
+                    }
+                    return answers;
+                }
+            },
+            {
+                name: '事业成长型用户',
+                description: '高成长需求 + 高现实观念',
+                getAnswers: () => {
+                    const answers = [];
+                    for (let i = 1; i <= 40; i++) {
+                        const category = questions.find(q => q.id === i)?.category;
+                        if (category === 'G' || category === 'R') {
+                            answers.push({ questionId: i, selectedOption: 'D' });
+                        } else {
+                            answers.push({ questionId: i, selectedOption: 'B' });
+                        }
+                    }
+                    return answers;
+                }
+            },
+            {
+                name: '理性务实型用户',
+                description: '极高现实需求 + 低情感表达',
+                getAnswers: () => {
+                    const answers = [];
+                    for (let i = 1; i <= 40; i++) {
+                        const category = questions.find(q => q.id === i)?.category;
+                        if (category === 'R') {
+                            answers.push({ questionId: i, selectedOption: 'D' });
+                        } else if (category === 'E') {
+                            answers.push({ questionId: i, selectedOption: 'A' });
+                        } else {
+                            answers.push({ questionId: i, selectedOption: 'B' });
+                        }
+                    }
+                    return answers;
+                }
+            },
+            {
+                name: '平衡型用户',
+                description: '各维度相对均衡',
+                getAnswers: () => {
+                    const answers = [];
+                    for (let i = 1; i <= 40; i++) {
+                        const options = ['A', 'B', 'C', 'D'];
+                        const random = Math.floor(Math.random() * 4);
+                        answers.push({ questionId: i, selectedOption: options[random] });
+                    }
+                    return answers;
+                }
+            }
+        ];
+
+        function testUser(user) {
+            const answers = user.getAnswers();
+            const rawScores = calculateDimensions(answers);
+            const normalizedScores = normalizeScores(rawScores);
+            const matchResult = matchPartnerTypes(normalizedScores);
+
+            return {
+                user: user.name,
+                description: user.description,
+                rawScores,
+                normalizedScores,
+                mainType: matchResult.mainType.name,
+                avoidType: matchResult.avoidType.name,
+                compatibility: matchResult.ranking[0].compatibility,
+                ranking: matchResult.ranking.map(r => ({
+                    type: r.type.name,
+                    compatibility: r.compatibility
+                }))
+            };
+        }
+
+        function renderDimensionBar(name, score) {
+            const colors = {
+                S: '#f48771', A: '#4ec9b0', G: '#dcdcaa',
+                R: '#569cd6', E: '#c586c0'
+            };
+            return `
+                <div class="dimension-${name}" style="margin: 5px 0;">
+                    <span style="display:inline-block;width:30px;font-weight:bold;">${name}</span>
+                    <span class="dimension-bar">
+                        <span class="dimension-fill" style="width:${score}%;background:${colors[name]}"></span>
+                    </span>
+                    <span style="margin-left:10px;color:${colors[name]};font-weight:bold;">${score}</span>
+                </div>
+            `;
+        }
+
+        function runAllTests() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>🧪 测试进行中...</h2>';
+
+            const results = testUsers.map(testUser);
+
+            let html = '<h2>✅ 测试完成</h2>';
+
+            // 显示每个用户的详细结果
+            results.forEach(result => {
+                html += `
+                    <div class="test-user">
+                        <h3>${result.user}</h3>
+                        <p style="color:#888;margin-bottom:10px;">${result.description}</p>
+                        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                            <div style="flex:1;min-width:300px;">
+                                <h4 style="color:#569cd6;">维度得分</h4>
+                                ${Object.keys(result.normalizedScores).map(key =>
+                                    renderDimensionBar(key, result.normalizedScores[key])
+                                ).join('')}
+                            </div>
+                            <div style="flex:1;min-width:300px;">
+                                <h4 style="color:#569cd6;">匹配结果</h4>
+                                <div class="result">
+                                    <strong>理想伴侣:</strong> <span style="color:#4ec9b0;font-size:18px;">${result.mainType}</span>
+                                </div>
+                                <div class="result">
+                                    <strong>适配度:</strong> <span style="color:#dcdcaa;font-size:18px;">${result.compatibility}%</span>
+                                </div>
+                                <div class="result">
+                                    <strong>避讳类型:</strong> <span style="color:#f48771;">${result.avoidType}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:15px;">
+                            <h4 style="color:#569cd6;">适配度排名</h4>
+                            ${result.ranking.map((r, i) => `
+                                <span class="ranking">${i+1}. ${r.type}: ${r.compatibility}%</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // 验证结果多样性
+            html += '<div class="summary">';
+            html += '<h2>📊 验证结果</h2>';
+
+            const mainTypes = results.map(r => r.mainType);
+            const uniqueMainTypes = new Set(mainTypes);
+            const mainTypeCounts = {};
+            mainTypes.forEach(t => mainTypeCounts[t] = (mainTypeCounts[t] || 0) + 1);
+
+            html += '<h3>多样性验证</h3>';
+            html += `<p>不同的理想伴侣类型数量: <strong>${uniqueMainTypes.size}</strong> / 8</p>`;
+
+            if (uniqueMainTypes.size >= 4) {
+                html += '<p class="pass">✅ 通过: 类型多样性良好</p>';
+            } else if (uniqueMainTypes.size >= 3) {
+                html += '<p class="warning">⚠️ 警告: 类型多样性一般</p>';
+            } else {
+                html += '<p class="fail">❌ 失败: 类型多样性不足!</p>';
+            }
+
+            html += '<p>类型分布:</p><ul>';
+            Object.keys(mainTypeCounts).forEach(type => {
+                html += `<li>${type}: ${mainTypeCounts[type]}次</li>`;
+            });
+            html += '</ul>';
+
+            // 验证避讳类型不同
+            let allDifferent = true;
+            results.forEach(r => {
+                if (r.mainType === r.avoidType) allDifferent = false;
+            });
+
+            if (allDifferent) {
+                html += '<p class="pass">✅ 通过: 所有用户的避讳类型都与理想伴侣类型不同</p>';
+            } else {
+                html += '<p class="fail">❌ 失败: 存在避讳类型与理想伴侣类型相同的情况!</p>';
+            }
+
+            // 验证适配度差异
+            html += '<h3>适配度差异化验证</h3>';
+            let minDiff = 100;
+            results.forEach(r => {
+                const max = r.ranking[0].compatibility;
+                const min = r.ranking[r.ranking.length - 1].compatibility;
+                const diff = max - min;
+                if (diff < minDiff) minDiff = diff;
+                html += `<p>${r.user}: 差异 ${diff}% (最高${max}%, 最低${min}%)</p>`;
+            });
+
+            if (minDiff >= 20) {
+                html += '<p class="pass">✅ 通过: 适配度差异明显</p>';
+            } else if (minDiff >= 10) {
+                html += '<p class="warning">⚠️ 警告: 适配度差异偏小</p>';
+            } else {
+                html += '<p class="fail">❌ 失败: 适配度差异过小!</p>';
+            }
+
+            html += '</div>';
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // 页面加载后自动运行测试
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>
